@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MarkeTrack — 你的每一次营销决策，都有据可查</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --foreground: #e8e8ea;
+      --background: transparent;
+      --border: rgba(255, 255, 255, 0.12);
+      --ring: #a78bfa;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: ui-sans-serif, system-ui, "PingFang SC", "Noto Sans SC", sans-serif;
+      width: 1920px;
+      min-height: 1204px;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background:
+        linear-gradient(183deg, #C7E800 -2.04%, #4A7C00 37.67%, rgba(0,0,0,0) 95.75%),
+        #000;
+    }
+
+    /* Canvas animation stage — object-cover: 1920×1400, 160px bleed top & bottom */
+    .stage {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 1920px;
+      height: 1400px;
+      background: transparent;
+    }
+
+    #c {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    /* Replay FAB — lives at top of stage, cropped above hero viewport */
+    .replay-fab {
+      position: absolute;
+      top: 12px;
+      right: 24px;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+    }
+    .replay-fab svg { width: 16px; height: 16px; opacity: 0.85; }
+    .replay-fab:hover { background: rgba(255,255,255,0.14); }
+
+    /* ===== Gradient overlay — fades bottom of animation to black ===== */
+    .hero-gradient-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 59.7%, rgba(0,0,0,1) 100%);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    @keyframes containerReveal {
+      from { opacity: 0; transform: translate(-50%, calc(-50% + 20px)); }
+      to   { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    /* ===== Hero text overlay ===== */
+    .hero-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      text-align: center;
+      pointer-events: none;
+      white-space: nowrap;
+      padding: 40px 72px;
+      border-radius: 300px;
+      background: rgba(16, 24, 4, 0.10);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      opacity: 0;
+      animation: containerReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 3s;
+    }
+
+    @keyframes heroReveal {
+      from { opacity: 0; transform: translateY(48px); filter: blur(4px); }
+      to   { opacity: 1; transform: translateY(0);    filter: blur(0px); }
+    }
+
+    .hero-title {
+      font-size: 46px;
+      font-weight: 700;
+      line-height: 1.22;
+      color: #fff;
+      letter-spacing: -0.01em;
+      text-shadow: 0 2px 32px rgba(0,0,0,0.6);
+      opacity: 0;
+      animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 3s;
+    }
+
+    .hero-title-en {
+      font-family: 'Geist', ui-sans-serif, sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 10px;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 3.25s;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 16px;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 3.5s;
+    }
+
+    /* ===== Below-fold sections ===== */
+    .below-hero {
+      width: 1920px;
+      min-height: 124px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 120px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero">
+
+    <!-- Canvas animation -->
+    <div class="stage">
+      <canvas id="c" aria-label="半色调点阵画布"></canvas>
+      <button type="button" class="replay-fab" id="btn-replay-fab" title="重播入场动画" aria-label="重播入场动画">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+          <path d="M3 3v5h5" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Bottom gradient overlay -->
+    <div class="hero-gradient-overlay"></div>
+
+    <!-- Text overlay -->
+    <div class="hero-content">
+      <h1 class="hero-title">
+        你的每一次营销决策，<br>都有据可查
+      </h1>
+    </div>
+
+  </section>
+
+  <!-- ===== BELOW FOLD ===== -->
+  <div class="below-hero"></div>
+
+  <script>
+(function () {
+  "use strict";
+
+  const CFG = {
+    grid: { spacing: 9.5, dotMin: 0.60, dotMax: 3.7 },
+    structure: {
+      coreBreathe: 0.045, coreContrast: 1.4, coreDriftLoopSec: 0,
+      coreDriftX: 0.48, coreDriftY: -0.32, coreFreq: 16, coreSpeed: 0.55,
+      rInner: 0.25, rRing1: 0.32, rRing1W: 0.02, rRing2: 0.48, rRing2W: 0.018
+    },
+    cells: {
+      cellCount: 9, cellSigma: 0.026,
+      haloCellCount: 14, haloCellSigma: 0.0075,
+      outCellCount: 7, outCellSigma: 0.02
+    },
+    shapes: {
+      sqCount: 3, sqHalf: 28, sqEdge: 3.5,
+      minSize: 6, maxSize: 90,
+      shapeDotMin: 0.60, shapeDotMax: 3.7
+    },
+    trail: {
+      hoverRippleBlend: 0.38, hoverRippleFade: 0.95, hoverRippleGain: 0.62,
+      hoverRippleLag: 0.072, hoverRippleSecondary: 0.36,
+      hoverRippleSigma: 0.024, hoverRippleSpeed: 0.28,
+      trailLife: 1.2, trailSigma: 0.025
+    },
+    explosion: {
+      bandVariance: 1, primaryPeak: 1.3, rippleLag: 0.15,
+      secondaryPeak: 0.7, shard: 1, wobble: 0.35
+    }
+  };
+
+  const N_CELL = 9, N_OUT = 7, N_HALO = 14, N_SHAPE = 3;
+  const TRAIL_RING = 48, RIPPLE_CAP = 36;
+  const Ut = 9, Kt = 0.048, Qt = 6, Jt = 3.3;
+  const Fe = 36;
+  const Be = ["square", "circle", "triangle"];
+  const Le = 0.78, Ne = 0.72, Oe = 0.34;
+  const qe = 0.3, yeP = 0.4, pe = 0.5, we = 0.8, We = 0.09, ve = 0.55, Zt = 0.85;
+  const Ge = 0.032, en = 0.055;
+  const On = 6;
+
+  let rgbFg = [228, 228, 234];
+
+  const ln = /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/;
+  const hn = /^rgba?\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*[\d.]+%?)?\s*\)$/i;
+  const dn = /^#([\da-f]{3}|[\da-f]{6})\b/i;
+  let probe = null;
+
+  function parseColorStr(t) {
+    let e = ln.exec(t);
+    if (e) return { r: +e[1], g: +e[2], b: +e[3] };
+    e = hn.exec(t.trim());
+    if (e) return { r: +e[1], g: +e[2], b: +e[3] };
+    e = dn.exec(t.trim());
+    if (e) {
+      const r = e[1];
+      return r.length === 3
+        ? { r: parseInt(r[0] + r[0], 16), g: parseInt(r[1] + r[1], 16), b: parseInt(r[2] + r[2], 16) }
+        : { r: parseInt(r.slice(0, 2), 16), g: parseInt(r.slice(2, 4), 16), b: parseInt(r.slice(4, 6), 16) };
+    }
+    return null;
+  }
+  function resolveCssColor(varName) {
+    if (!probe) {
+      probe = document.createElement("div");
+      probe.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none";
+    }
+    probe.style.background = varName;
+    document.documentElement.appendChild(probe);
+    const c = getComputedStyle(probe).backgroundColor;
+    document.documentElement.removeChild(probe);
+    if (!c || c === "rgba(0, 0, 0, 0)" || c === "transparent") return rgbFg;
+    const p = parseColorStr(c);
+    return p ? [p.r, p.g, p.b] : rgbFg;
+  }
+
+  function Pe(t) { return t * t * t; }
+  function bn(t) { return 1 - (1 - t) ** 3; }
+  function Rn(t) { return 1 - (1 - t) ** 4; }
+  function J(a, b, x) {
+    const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+  }
+  function U(t) {
+    const x = Math.sin(t * 12.9898) * 43758.5453;
+    return x - Math.floor(x);
+  }
+  function Se(t, e) {
+    const n = Math.sin(t * 12.9898 + e * 78.233) * 43758.5453;
+    return n - Math.floor(n);
+  }
+  function et(t, e, n) {
+    const s = t + 0.32 * Math.sin(e * 3.1 + n * 0.38);
+    const r = e + 0.32 * Math.cos(t * 2.7 - n * 0.3);
+    return Math.sin(s * 6.8 + n * 0.75) * 0.28 + Math.sin(r * 5 - n * 0.62) * 0.25
+      + Math.sin((s + r) * 3.8 + n * 0.52) * 0.22 + Math.sin(Math.sqrt(s * s + r * r) * 8.5 - n * 1.05) * 0.25;
+  }
+  function wn(t, e) {
+    return e * (0.038 * Math.sin(t * 3 + 1.4) + 0.024 * Math.sin(t * 7 - 0.8) + 0.014 * Math.sin(t * 11 + 2.1));
+  }
+  function vn(t, e) {
+    return 1 + e * (0.35 * Math.sin(t * 4 + 1.7) + 0.15 * Math.sin(t * 9 - 2.3));
+  }
+  function En(t, e) {
+    if (e <= 0) return 0;
+    const n = Math.PI * 2, s = t / n;
+    const r = Math.floor(s * 19), o = Math.floor(s * 47), a = Math.floor(s * 11);
+    const i = U(r * 503 + o * 301 + 199) * 0.52 + U(o * 709 + a * 977 + 51) * 0.33 + U(r * 401 + a * 601 + 17) * 0.15;
+    return e * (i - 0.5) * 0.15;
+  }
+  function Cn(t, e) {
+    if (e <= 0) return 1;
+    const n = t / (Math.PI * 2), s = Math.floor(n * 17), r = U(s * 911 + 257);
+    return 1 + e * 0.4 * (r - 0.5);
+  }
+  function Ae(t, e, n, s) {
+    const r = Math.abs(t - e);
+    return Math.exp(-(r * r) / (2 * n * n)) * s;
+  }
+  function An(t, e) { return t <= 0 ? 0 : Math.min(1, t / e); }
+
+  const yn = { skip: false, wavefrontOnly: false, wavefront: 0, coreT: 1, ring1T: 1, ring2T: 1, cellT: 1, trailT: 1, shapeT: 1 };
+  const Ce = { skip: true, wavefrontOnly: true, wavefront: 0, coreT: 0, ring1T: 0, ring2T: 0, cellT: 0, trailT: 0, shapeT: 0 };
+
+  function kn(t, e, n, s) {
+    if (n >= 1) return yn;
+    if (n < pe) {
+      let E;
+      if (n <= qe) { const C = n / qe; E = bn(C) * we; }
+      else if (n <= yeP) E = we;
+      else { const C = (n - yeP) / (pe - yeP); E = we * (1 - Pe(C)); }
+      if (E <= 0) return Ce;
+      const k = Ae(t, E, Ge, s.primaryPeak), S = We;
+      if (Math.abs(t - E) > S) return Ce;
+      return { skip: false, wavefrontOnly: true, wavefront: k, coreT: 0, ring1T: 0, ring2T: 0, cellT: 0, trailT: 0, shapeT: 0 };
+    }
+    const r = (n - pe) / (1 - pe);
+    const o = wn(e, s.wobble), a = En(e, s.shard), i = o + a;
+    const l = Math.max(0, r + i), h = Math.max(0, r - s.rippleLag + i);
+    const d = Ae(t, l, Ge, s.primaryPeak), g = r > s.rippleLag;
+    const p = g ? Ae(t, h, en, s.secondaryPeak) * An(r - s.rippleLag, 0.05) : 0;
+    const f = Math.max(d, p), m = Math.abs(t - l), R = Math.abs(t - h);
+    const y = We * vn(e, s.bandVariance) * Cn(e, s.shard);
+    if (r < ve) {
+      if (m > y && (!g || R > y)) return Ce;
+      return { skip: false, wavefrontOnly: true, wavefront: f, coreT: 0, ring1T: 0, ring2T: 0, cellT: 0, trailT: 0, shapeT: 0 };
+    }
+    const A = 1 - (r - ve) / (1 - ve);
+    return {
+      skip: false, wavefrontOnly: false, wavefront: f * A * Zt,
+      coreT: J(0.55, 0.7, r), ring1T: J(0.68, 0.82, r), ring2T: J(0.78, 0.92, r),
+      cellT: J(0.86, 1, r), trailT: J(0.8, 0.95, r), shapeT: J(0.9, 1, r)
+    };
+  }
+
+  function Tn(t, e, n, s, r, o, a, i, l, h, d, g, p, f, m, R, y, A, E, k, S) {
+    const C = 1 + i * Math.sin(o * 1.1) * Math.cos(o * 0.7);
+    const v = a * C;
+    return r < v ? tt(t, e, r, v, l, h, d, o, g, p, f) * E
+      : r > m - R && r < m ? nt(r, n, s, m, R, o) * k
+      : r > y - A && r < y ? rt(r, n, s, y, A, o) * S : 0;
+  }
+
+  function _n(t, e, n) {
+    const s = Math.abs(t), r = Math.abs(e), o = s - n, a = r - n;
+    return Math.sqrt(Math.max(o, 0) ** 2 + Math.max(a, 0) ** 2) + Math.min(Math.max(o, a), 0);
+  }
+  function Pn(t, e, n) { return Math.sqrt(t * t + e * e) - n; }
+  function Sn(t, e, n) {
+    const s = Math.sqrt(3);
+    let r = Math.abs(t) - n, o = e + n / s;
+    if (r + s * o > 0) {
+      const a = r, i = o;
+      r = (a - s * i) * 0.5; o = (-s * a - i) * 0.5;
+    }
+    r -= Math.max(Math.min(r, 0), -2 * n);
+    return -Math.sqrt(r * r + o * o) * Math.sign(o);
+  }
+  function Ye(kind, x, y, s) {
+    return kind === "circle" ? Pn(x, y, s) : kind === "triangle" ? Sn(x, y, s) : _n(x, y, s);
+  }
+
+  const In = Math.PI * (3 - Math.sqrt(5));
+  function jn(t, e) {
+    const n = Math.max(1, e), s = t * In + 0.7, o = 0.08 + 0.27 * Math.sqrt((t + 1) / (n + 1));
+    return { x: 0.5 + o * Math.cos(s), y: 0.5 + o * Math.sin(s) };
+  }
+
+  function ge(t = 0) {
+    return {
+      angle: Math.random() * Math.PI * 2, startR: 0.5 + Math.random() * 0.05, sigma: 0.026 * (0.7 + Math.random() * 0.4),
+      progress: t, speed: 0.0018 + Math.random() * 0.0014, wobble: (Math.random() - 0.5) * 0.55
+    };
+  }
+  function me(t = 0) {
+    return {
+      angle: Math.random() * Math.PI * 2, startR: 0.01 + Math.random() * 0.04, sigma: 0.02 * (0.7 + Math.random() * 0.5),
+      progress: t, speed: 0.0016 + Math.random() * 0.0012, wobble: (Math.random() - 0.5) * 0.35
+    };
+  }
+  function Me(t = 0) {
+    return {
+      angle: Math.random() * Math.PI * 2, startR: 0.5 + Math.random() * 0.11, attractR: 0.045 + Math.random() * 0.055,
+      sigmaMul: 0.62 + Math.random() * 0.38, progress: t, speed: 0.00085 + Math.random() * 0.00075,
+      wobble: (Math.random() - 0.5) * 0.22
+    };
+  }
+  function xe(t = 0, idx = 0, n = 1) {
+    const s = jn(idx, n), r = Be[Math.floor(Math.random() * 3)], o = Be.filter(d => d !== r)[Math.floor(Math.random() * 2)];
+    const a = 0.15 + Math.random() * 0.05, i = a + 0.18 + Math.random() * 0.08, l = i + 0.05 + Math.random() * 0.02, h = l + 0.16 + Math.random() * 0.08;
+    return {
+      x: s.x + (Math.random() - 0.5) * 0.06, y: s.y + (Math.random() - 0.5) * 0.06,
+      driftAmp: 0.04 + Math.random() * 0.06, driftFreqX: 0.18 + Math.random() * 0.22, driftFreqY: 0.14 + Math.random() * 0.2,
+      driftPhaseX: Math.random() * Math.PI * 2, driftPhaseY: Math.random() * Math.PI * 2, noiseOff: Math.random() * 100,
+      sizeVar: 0.55 + Math.random() * 0.7, shapeA: r, shapeB: o, progress: t,
+      speed: 0.0018 + Math.random() * 0.0014, t1: a, t2: i, t3: l, t4: h, idx
+    };
+  }
+
+  function Dn(t, e, n, s) {
+    const r = Math.max(n, s), o = Math.min(n, r), a = e * t;
+    if (a >= o && a <= r) return a;
+    const i = Math.max(0, Math.min(1, (t - 0.55) / 0.7));
+    return o + i * (r - o);
+  }
+
+  function Ln(t, e, n, s, r) {
+    if (t < e) {
+      const a = t / e, i = 4, l = 0.28;
+      const h = 1 + l * Math.sin(a * Math.PI * i) * (1 - a) - (1 - a) ** 3 * (1 + l);
+      return { scale: Math.max(0, h), morphT: 0 };
+    }
+    if (t < n) return { scale: 1, morphT: 0 };
+    if (t < s) {
+      const a = (t - n) / (s - n), i = 3, l = 0.25;
+      const h = 1 + l * Math.sin(a * Math.PI * i) * (1 - a) - (1 - a) ** 3 * (1 + l);
+      return { scale: 1, morphT: Math.max(0, Math.min(1, h)) };
+    }
+    if (t < r) return { scale: 1, morphT: 1 };
+    const o = (t - r) / (1 - r);
+    return { scale: 1 - o * o, morphT: 1 };
+  }
+
+  function Nn(t, e) {
+    const n = Math.floor(t), s = Math.floor(e);
+    let r = Infinity, o = 0;
+    for (let a = -1; a <= 1; a++)
+      for (let i = -1; i <= 1; i++) {
+        const l = n + i, h = s + a;
+        const d = (U(l * 1271 + h * 311) - 0.5) * 0.92, g = (U(l * 523 + h * 1009) - 0.5) * 0.92;
+        const p = l + 0.5 + d, f = h + 0.5 + g, m = t - p, R = e - f, y = m * m + R * R;
+        if (y < r) { r = y; o = U(l * 719 + h * 997 + 13); }
+      }
+    return o;
+  }
+
+  function tt(t, e, n, s, r, o, a, i, l, h, d) {
+    const g = d > 0 ? i - Math.floor(i / d) * d : i;
+    const p = g * l, f = g * h;
+    const m = t * r + p, R = e * r + f;
+    const A = et(m, R, i * o) * 0.5 + 0.5;
+    const E = Nn(m * Le, R * Le);
+    const k = A, C = E * (1 - Oe + Oe * k) * Ne + A * (1 - Ne);
+    const B = C * C * (3 - 2 * C);
+    const F = (1 - n / s) ** 0.35;
+    return Math.min(1, Math.max(0.08, B) * F * a);
+  }
+  function nt(t, e, n, s, r, o) {
+    const a = (t - (s - r)) / r, i = Math.sin(a * Math.PI);
+    const l = Math.atan2(n, e);
+    const h = Math.sin(l * 6 + o * 1.4) * 0.3 + Math.sin(l * 10 - o * 0.9) * 0.25 + Math.sin(l * 3 + o * 0.7) * 0.25 + 0.5;
+    const d = o * 1.8, g = Math.abs((l - d + Math.PI * 3) % (Math.PI * 2) - Math.PI);
+    const p = Math.exp(-(g * g) / (2 * 0.12 * 0.12));
+    return Math.max(0, (h + p * 0.7) * i) * 0.9;
+  }
+  function rt(t, e, n, s, r, o) {
+    const a = (t - (s - r)) / r, i = Math.sin(a * Math.PI);
+    const l = Math.atan2(n, e);
+    const h = Math.sin(l * 8 - o * 1.1) * 0.28 + Math.sin(l * 14 + o * 0.8) * 0.22 + Math.sin(l * 4 - o * 0.5) * 0.25 + 0.5;
+    const d = o * 1.2, g = -o * 0.9 + Math.PI;
+    const p = Math.abs((l - d + Math.PI * 3) % (Math.PI * 2) - Math.PI);
+    const f = Math.abs((l - g + Math.PI * 3) % (Math.PI * 2) - Math.PI);
+    const m = Math.exp(-(p * p) / (2 * 0.14 * 0.14)) * 0.6 + Math.exp(-(f * f) / (2 * 0.18 * 0.18)) * 0.4;
+    return Math.max(0, (h + m) * i) * 0.8;
+  }
+
+  function ke(t, e, n) {
+    let s = 0;
+    for (const r of n) {
+      if (r.envelope < 0.01) continue;
+      const o = t - r.worldX, a = e - r.worldY;
+      if (Math.abs(o) > r.cutoff || Math.abs(a) > r.cutoff) continue;
+      const i = o * o + a * a;
+      if (i > r.cutoff * r.cutoff) continue;
+      const l = Math.exp(-i / r.twoSig2);
+      if (l > s) s = l;
+    }
+    return s;
+  }
+
+  function ot(t, e, n, s, r) {
+    let o = 0;
+    for (const i of n) {
+      const l = t - i.x, h = e - i.y, d = l * l + h * h;
+      if (!(d > r) && (o += Math.exp(-d / s) * i.weight, o >= 1)) return 1;
+    }
+    const a = Math.min(1, o);
+    return a * a * (3 - 2 * a);
+  }
+
+  function Ve(t, e, n, s) {
+    if (s <= 0 || n < 1e-6) return 0;
+    const r = Math.abs(t - e);
+    return Math.exp(-(r * r) / (2 * n * n)) * s;
+  }
+
+  function Bn(ripplePts, te, bake) {
+    const s = bake.prepared;
+    if (te.peak <= 0) { s.length = 0; return; }
+    const r = te.sigmaNorm * te.lW, o = te.expandNormPerSec * te.lW;
+    const a = 1.25 * Math.hypot(te.lW, te.lH);
+    bake.sigPx = r; bake.maxR = a; bake.perPeak = te.peak * 0.38; bake.secondaryPeak = te.secondaryPeak;
+    let i = 0;
+    for (const l of ripplePts) {
+      const h = te.wallNow - l.born;
+      if (h < 0) continue;
+      const d = Math.exp(-h * te.fadePerSec);
+      if (d < 0.002) continue;
+      const g = Math.min(h * o, a), p = Math.min(Math.max(0, h - te.lagSec) * o, a);
+      if (i >= s.length) s.push({ x: l.x, y: l.y, fade: d, r1: g, r2: p });
+      else {
+        const f = s[i];
+        f.x = l.x; f.y = l.y; f.fade = d; f.r1 = g; f.r2 = p;
+      }
+      i++;
+    }
+    s.length = i;
+  }
+
+  function st(t, e, bake) {
+    const { prepared: s, sigPx: r, maxR: o, perPeak: a, secondaryPeak: i } = bake;
+    if (a <= 0 || s.length === 0) return 0;
+    const l = On * r, h = (o + l) * (o + l), d = i;
+    let g = 0;
+    for (const p of s) {
+      const f = t - p.x, m = e - p.y, R = f * f + m * m;
+      if (R > h) continue;
+      const y = Math.sqrt(R);
+      g += (Ve(y, p.r1, r, a) + Ve(y, p.r2, r * 1.12, a * d)) * p.fade;
+    }
+    return Math.min(1, g);
+  }
+
+  function je() { return { worldX: 0, worldY: 0, twoSig2: 0, cutoff: 0, envelope: 0 }; }
+
+  function Ie(arr, len, fn) {
+    while (arr.length < len) arr.push(fn());
+    arr.length = len;
+  }
+  function be(arr, len, fn) {
+    while (arr.length < len) arr.push(fn());
+    if (arr.length > len) arr.length = len;
+  }
+
+  function Wn(src, dst, T, rRing2) {
+    Ie(dst, src.length, je);
+    for (let r = 0; r < src.length; r++) {
+      const o = src[r], a = dst[r], i = o.progress, l = Pe(i), h = (1 - i) ** 2;
+      const d = o.angle + o.wobble * Math.sin(i * Math.PI * 2.5) * h;
+      const g = Math.sin(i * Math.PI) ** 1.4;
+      const p = o.startR * (1 - l) + rRing2 * l, f = o.sigma * T.lW * g;
+      a.worldX = T.cx + Math.cos(d) * p * T.lW;
+      a.worldY = T.cy + Math.sin(d) * p * T.lW;
+      a.twoSig2 = 2 * f * f; a.cutoff = f * 3; a.envelope = g;
+    }
+  }
+  function Gn(src, dst, T, rRing2) {
+    Ie(dst, src.length, je);
+    for (let r = 0; r < src.length; r++) {
+      const o = src[r], a = dst[r], i = o.progress, l = 1 - (1 - i) ** 2.5, h = (1 - i) ** 2;
+      const d = o.angle + o.wobble * Math.sin(i * Math.PI * 2) * h;
+      const g = Math.sin(i * Math.PI) ** 1.6;
+      const p = o.startR * (1 - l) + rRing2 * l, f = o.sigma * T.lW * g;
+      a.worldX = T.cx + Math.cos(d) * p * T.lW;
+      a.worldY = T.cy + Math.sin(d) * p * T.lW;
+      a.twoSig2 = 2 * f * f; a.cutoff = f * 3; a.envelope = g;
+    }
+  }
+  function Hn(src, dst, T, haloSig) {
+    Ie(dst, src.length, je);
+    for (let r = 0; r < src.length; r++) {
+      const o = src[r], a = dst[r], i = o.progress, l = Pe(i), h = (1 - i) ** 1.6;
+      const d = o.angle + o.wobble * Math.sin(i * Math.PI * 3.2) * h;
+      const g = Math.sin(i * Math.PI) ** 1.15;
+      const p = o.startR * (1 - l) + o.attractR * l, f = haloSig * o.sigmaMul * T.lW * g;
+      a.worldX = T.cx + Math.cos(d) * p * T.lW;
+      a.worldY = T.cy + Math.sin(d) * p * T.lW;
+      a.twoSig2 = 2 * f * f; a.cutoff = f * 3; a.envelope = g;
+    }
+  }
+
+  function Yn(samples, trailLife, now) {
+    const kept = [];
+    for (const a of samples) {
+      if (now - a.born < trailLife) kept.push(a);
+    }
+    samples.length = 0;
+    for (const x of kept) samples.push(x);
+    const out = [];
+    const o = samples.length;
+    for (let a = 0; a < o; a++) {
+      const i = samples[a], h = (now - i.born) / trailLife, d = a / Math.max(1, o - 1);
+      const p = (1 - h) ** 2 * (0.08 + d * 0.92);
+      if (p >= 0.005) out.push({ x: i.x, y: i.y, weight: p });
+    }
+    return out;
+  }
+
+  function Vn(arr, now, maxAge, fadePerSec) {
+    let r = 0;
+    for (const o of arr) {
+      const a = now - o.born;
+      if (a > maxAge || Math.exp(-a * fadePerSec) < 0.0025) continue;
+      arr[r++] = o;
+    }
+    arr.length = r;
+  }
+
+  function Xn(t, nx, ny, dxW, dyW, dist, m, time) {
+    const a = m;
+    const l = 1 + a.coreBreathe * Math.sin(time * 1.1) * Math.cos(time * 0.7);
+    const h = a.rInner * l;
+    if (dist < h) {
+      const d = tt(nx, ny, dist, h, a.coreFreq, a.coreSpeed, a.coreContrast, time, a.coreDriftX, a.coreDriftY, a.coreDriftLoopSec);
+      return Math.min(1, t + d);
+    }
+    return dist > a.rRing1 - a.rRing1W && dist < a.rRing1 ? Math.min(1, t + nt(dist, dxW, dyW, a.rRing1, a.rRing1W, time))
+      : dist > a.rRing2 - a.rRing2W && dist < a.rRing2 ? Math.min(1, t + rt(dist, dxW, dyW, a.rRing2, a.rRing2W, time)) : t;
+  }
+
+  function zn(shapes, T, sqHalf, minSize, maxSize) {
+    const o = [];
+    for (const a of shapes) {
+      const i = Ln(a.progress, a.t1, a.t2, a.t3, a.t4);
+      if (i.scale < 0.01) continue;
+      const h = Dn(a.sizeVar, sqHalf, minSize, maxSize) * i.scale;
+      o.push({
+        cx: (a.x + Math.sin(T.t * a.driftFreqX + a.driftPhaseX) * a.driftAmp) * T.lW,
+        cy: (a.y + Math.sin(T.t * a.driftFreqY + a.driftPhaseY) * a.driftAmp) * T.lH,
+        half: h, morphT: i.morphT, shapeA: a.shapeA, shapeB: a.shapeB, scale: i.scale, noiseOff: a.noiseOff
+      });
+    }
+    return o;
+  }
+
+  function it(x, y, fields, edge) {
+    let r = 0;
+    for (const o of fields) {
+      const a = x - o.cx, i = y - o.cy, l = Math.abs(a), h = Math.abs(i);
+      if (l > o.half + edge * 2 || h > o.half + edge * 2) continue;
+      const d = Ye(o.shapeA, a, i, o.half), g = Ye(o.shapeB, a, i, o.half);
+      const p = Math.abs(d + (g - d) * o.morphT), f = edge * 0.55;
+      const m = Math.exp(-(p * p) / (2 * f * f));
+      if (m < 0.015) continue;
+      const R = Math.min(1, m * o.scale * 4);
+      if (R > r) r = R;
+    }
+    return r;
+  }
+
+  function Mn(alpha) {
+    const [e, n, s] = rgbFg;
+    const r = Math.min(1, 0.18 + alpha * 0.82);
+    return `rgba(${e},${n},${s},${r})`;
+  }
+  function xn(alpha) {
+    const [e, n, s] = rgbFg;
+    const r = Math.min(1, 0.32 + alpha * 0.68);
+    return `rgba(${e},${n},${s},${r})`;
+  }
+
+  function ie(ctx, x, y, v, dotMin, dotMax, w) {
+    const rad = (dotMin + v * (dotMax - dotMin)) * w;
+    ctx.beginPath();
+    ctx.arc(x, y, rad, 0, Math.PI * 2);
+    ctx.fillStyle = Mn(v);
+    ctx.fill();
+  }
+
+  function ct(ctx, x, y, q, nx, ny, time, dotMin, dotMax, w) {
+    const g = 0.3 + (et(nx * 4.5, ny * 4.5, time * 0.35) * 0.5 + 0.5) * 1.5;
+    const rad = (dotMin + q * (dotMax - dotMin)) * w * g;
+    ctx.beginPath();
+    ctx.arc(x, y, rad, 0, Math.PI * 2);
+    ctx.fillStyle = xn(q);
+    ctx.fill();
+  }
+
+  function lt(x, y, o) {
+    return Math.max(ke(x, y, o.cellPos), ke(x, y, o.outCellPos), ke(x, y, o.haloCellPos));
+  }
+
+  function $n(col, row, T) {
+    const s = CFG.grid.spacing;
+    const r = row % 2 === 0 ? 0 : s * 0.5;
+    const ox = col * s + r - s, oy = row * s - s;
+    const h = (ox - T.cx) / T.lW, d = (oy - T.cy) / T.lH;
+    return {
+      x: ox, y: oy, nx: ox / T.lW, ny: oy / T.lH,
+      dxW: h, dyW: d, dist: Math.sqrt(h * h + d * d), angle: Math.atan2(d, h)
+    };
+  }
+
+  function Un(ctx, col, row, cell, pack, drawShapes) {
+    const i = CFG, t = T.t;
+    const { dotMin: h, dotMax: d } = i.grid;
+    const { shapeDotMin: g, shapeDotMax: p } = i.shapes;
+    const { x: f, y: m, nx: R, ny: y, dxW: A, dyW: E, dist: k } = cell;
+    const S = lt(f, m, pack);
+    const C = Xn(Math.min(0.75, S), R, y, A, E, k, i.structure, t);
+    const v = Math.min(1, C);
+    const B = ot(f, m, pack.tSamples, pack.trailTwoSig2, pack.cullR2);
+    const F = st(f, m, pack.hoverRippleBake);
+    const q = Math.min(1, B + F * i.trail.hoverRippleBlend);
+    const I = drawShapes ? it(f, m, pack.sqFields, pack.sqEdge) : 0;
+    if (v < 0.012 && q < 0.01 && I < 0.012) return;
+    const W = 0.65 + Se(col, row) * 0.35;
+    if (v >= 0.012) ie(ctx, f, m, v, h, d, W);
+    if (q > 0.01) ct(ctx, f, m, q, R, y, t, h, d, W);
+    if (I >= 0.012) ie(ctx, f, m, Math.min(1, I ** 0.4), g, p, W);
+  }
+
+  function Kn(ctx, col, row, cell, pack, wave, drawShapes) {
+    const i = CFG, t = T.t;
+    const { dotMin: d, dotMax: g } = i.grid;
+    const { shapeDotMin: p, shapeDotMax: f } = i.shapes;
+    const m = i.structure;
+    const { x: R, y, nx: A, ny: E, dxW: k, dyW: S, dist: C } = cell;
+    const v = Se(col, row);
+    const B = v < wave.coreT ? 1 : 0, F = v < wave.ring1T ? 1 : 0, q = v < wave.ring2T ? 1 : 0;
+    const I = v < wave.cellT ? 1 : 0, W = v < wave.trailT ? 1 : 0, Z = v < wave.shapeT ? 1 : 0;
+    const K = lt(R, y, pack);
+    const ce = Tn(A, E, k, S, C, t, m.rInner, m.coreBreathe, m.coreFreq, m.coreSpeed, m.coreContrast, m.coreDriftX, m.coreDriftY, m.coreDriftLoopSec, m.rRing1, m.rRing1W, m.rRing2, m.rRing2W, B, F, q);
+    const le = Math.min(0.75, K) * I;
+    const H = Math.min(1, le + ce + wave.wavefront);
+    const he = ot(R, y, pack.tSamples, pack.trailTwoSig2, pack.cullR2) * W;
+    const de = st(R, y, pack.hoverRippleBake) * W;
+    const Y = Math.min(1, he + de * i.trail.hoverRippleBlend);
+    const G = drawShapes ? it(R, y, pack.sqFields, pack.sqEdge) * Z : 0;
+    if (H < 0.012 && Y < 0.01 && G < 0.012) return;
+    const u = 0.65 + v * 0.35;
+    if (H >= 0.012) ie(ctx, R, y, H, d, g, u);
+    if (Y > 0.01) ct(ctx, R, y, Y, A, E, t, d, g, u);
+    if (G >= 0.012) ie(ctx, R, y, Math.min(1, G ** 0.4), p, f, u);
+  }
+
+  function Qn(ctx, col, row, cell, wave) {
+    if (wave.wavefront < 0.05) return;
+    const { dotMin: a, dotMax: i } = CFG.grid;
+    const l = 0.65 + Se(col, row) * 0.35;
+    ie(ctx, cell.x, cell.y, Math.min(1, wave.wavefront), a, i, l);
+  }
+
+  function Jn(ctx, col, row, pack, drawShapes) {
+    const cell = $n(col, row, T);
+    const i = kn(cell.dist, cell.angle, T.entry, CFG.explosion);
+    if (i.skip) return;
+    if (i.wavefrontOnly) {
+      Qn(ctx, col, row, cell, i);
+      return;
+    }
+    if (T.entry >= 1) {
+      Un(ctx, col, row, cell, pack, drawShapes);
+      return;
+    }
+    Kn(ctx, col, row, cell, pack, i, drawShapes);
+  }
+
+  function Zn(ctx, pack) {
+    const { lW: s, lH: r } = T;
+    const o = CFG.grid.spacing;
+    const a = Math.ceil(s / o) + 2, i = Math.ceil(r / o) + 2;
+    const l = pack.sqFields.length > 0;
+    for (let h = 0; h < i; h++)
+      for (let d = 0; d < a; d++)
+        Jn(ctx, d, h, pack, l);
+  }
+
+  // ——— runtime state ———
+  const canvas = document.getElementById("c");
+  const ctx2d = canvas.getContext("2d");
+  let bgCanvas = null;
+
+  let pCell = Array.from({ length: N_CELL }, (_, x) => ge(x / N_CELL));
+  let pOut = Array.from({ length: N_OUT }, (_, x) => me(x / N_OUT));
+  let pHalo = Array.from({ length: N_HALO }, (_, x) => Me(x / N_HALO));
+  let pShape = Array.from({ length: N_SHAPE }, (_, x) => xe(x / N_SHAPE, x, N_SHAPE));
+
+  const cellPos = [], outCellPos = [], haloCellPos = [];
+  const trailSamples = [];
+  const ripplePts = [];
+  const hoverRippleBake = { maxR: 0, perPeak: 0, prepared: [], secondaryPeak: 0, sigPx: 0 };
+
+  let pointer = { x: -1, y: -1, active: false };
+  let timeAccum = 0, entryPhase = 0;
+  let lastRippleX = 0, lastRippleY = 0, lastRippleT = 0;
+  let raf = 0, visible = true, reducedMotion = false;
+
+  let T = {
+    c: CFG, lW: 400, lH: 400, cx: 200, cy: 200, t: 0, entry: 0
+  };
+
+  function resizeCanvas() {
+    const el = canvas.parentElement;
+    const w = el.clientWidth, h = el.clientHeight;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.max(1, Math.round(w * dpr));
+    canvas.height = Math.max(1, Math.round(h * dpr));
+    ctx2d.setTransform(1, 0, 0, 1, 0, 0);
+    ctx2d.scale(dpr, dpr);
+    bgCanvas = null;
+    rgbFg = [228, 228, 234]; // always light dots for dark bg
+  }
+
+  // Transparent background so the hero gradient shows through
+  function makeBg(w, h) {
+    const s = document.createElement("canvas");
+    const r = window.devicePixelRatio || 1;
+    s.width = Math.max(1, Math.round(w * r));
+    s.height = Math.max(1, Math.round(h * r));
+    s._logicalW = w;
+    s._logicalH = h;
+    // transparent — no fill, dots render over the CSS gradient background
+    return s;
+  }
+
+  function resetParticles() {
+    pCell = Array.from({ length: N_CELL }, () => ge(Math.random()));
+    pOut = Array.from({ length: N_OUT }, () => me(Math.random()));
+    pHalo = Array.from({ length: N_HALO }, () => Me(Math.random()));
+    pShape = Array.from({ length: N_SHAPE }, (_, x) => xe(Math.random(), x, N_SHAPE));
+    trailSamples.length = 0;
+    ripplePts.length = 0;
+    timeAccum = 0;
+    entryPhase = 0;
+  }
+
+  function stepParticles(dt) {
+    const w = CFG;
+    be(pCell, Math.round(w.cells.cellCount), () => ge(Math.random()));
+    for (const o of pCell) {
+      o.progress += o.speed * dt;
+      if (o.progress >= 1) o.progress = 0;
+    }
+    be(pOut, Math.round(w.cells.outCellCount), () => me(Math.random()));
+    for (const o of pOut) {
+      o.progress += o.speed * dt;
+      if (o.progress >= 1) o.progress = 0;
+    }
+    be(pHalo, Math.round(w.cells.haloCellCount), () => Me(Math.random()));
+    for (const o of pHalo) {
+      o.progress += o.speed * dt;
+      if (o.progress >= 1) o.progress = 0;
+    }
+    const sqN = Math.round(w.shapes.sqCount);
+    be(pShape, sqN, () => xe(Math.random(), pShape.length, sqN));
+    for (const o of pShape) {
+      o.progress += o.speed * dt;
+      if (o.progress >= 1) o.progress = 0;
+    }
+  }
+
+  function drawFrame(scaledDt) {
+    const w = CFG, tr = w.trail;
+    const N = canvas.parentElement.clientWidth, j = canvas.parentElement.clientHeight;
+    if (!bgCanvas || bgCanvas._logicalW !== N || bgCanvas._logicalH !== j) {
+      bgCanvas = makeBg(N, j);
+    }
+    const O = 0.016 * scaledDt;
+    timeAccum += O;
+    entryPhase = Math.min(1, entryPhase + O / Jt);
+    T = {
+      c: CFG, lW: N, lH: j, cx: N * 0.5, cy: j * 0.5,
+      t: timeAccum, entry: Rn(entryPhase)
+    };
+
+    stepParticles(scaledDt);
+
+    Wn(pCell, cellPos, T, w.structure.rRing2);
+    Gn(pOut, outCellPos, T, w.structure.rRing2);
+    Hn(pHalo, haloCellPos, T, w.cells.haloCellSigma);
+
+    // Clear to transparent each frame
+    ctx2d.clearRect(0, 0, N, j);
+
+    const wallNow = performance.now() / 1000;
+    Vn(ripplePts, wallNow, Qt, tr.hoverRippleFade);
+
+    const trailSigmaPx = tr.trailSigma * N;
+    const trailTwoSig2 = 2 * trailSigmaPx * trailSigmaPx;
+    const cullR2 = (trailSigmaPx * 2.8) ** 2;
+
+    const te = {
+      wallNow, lW: N, lH: j,
+      sigmaNorm: tr.hoverRippleSigma,
+      expandNormPerSec: tr.hoverRippleSpeed,
+      peak: tr.hoverRippleGain,
+      fadePerSec: tr.hoverRippleFade,
+      lagSec: tr.hoverRippleLag,
+      secondaryPeak: tr.hoverRippleSecondary
+    };
+    if (tr.hoverRippleBlend > 0) Bn(ripplePts, te, hoverRippleBake);
+    else hoverRippleBake.prepared.length = 0;
+
+    const tSamples = Yn(trailSamples, tr.trailLife, wallNow);
+    const sqFields = zn(pShape, T, w.shapes.sqHalf, w.shapes.minSize, w.shapes.maxSize);
+
+    const pack = {
+      cellPos, haloCellPos, outCellPos,
+      hoverRippleBake,
+      tSamples,
+      trailTwoSig2,
+      cullR2,
+      sqFields,
+      sqEdge: w.shapes.sqEdge
+    };
+
+    Zn(ctx2d, pack);
+  }
+
+  function loop(ts) {
+    raf = requestAnimationFrame(loop);
+    if (!visible || reducedMotion) return;
+    const last = loop.prev || ts;
+    loop.prev = ts;
+    const dt = (ts - last) / 1000;
+    const scaled = Math.min(2, Math.max(0, dt * 60));
+    try {
+      drawFrame(scaled);
+    } catch (e) {
+      console.error("halftone draw error:", e);
+    }
+  }
+
+  function drawStatic() {
+    drawFrame(0);
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function onPointerMove(ev) {
+    const rect = canvas.getBoundingClientRect();
+    const te = canvas.offsetWidth / rect.width, ne = canvas.offsetHeight / rect.height;
+    const X = (ev.clientX - rect.left) * te, Y = (ev.clientY - rect.top) * ne;
+    const wallNow = performance.now() / 1000;
+    const tr = CFG.trail;
+    const wasActive = pointer.active;
+    pointer = { x: X, y: Y, active: true };
+
+    if (tr.hoverRippleGain > 0 && tr.hoverRippleBlend > 0) {
+      const dt = X - lastRippleX, ut = Y - lastRippleY, ft = Math.hypot(dt, ut), pt = wallNow - lastRippleT;
+      if (!wasActive || ft >= Ut || pt >= Kt) {
+        ripplePts.push({ x: X, y: Y, born: wallNow });
+        if (ripplePts.length > RIPPLE_CAP) ripplePts.splice(0, ripplePts.length - RIPPLE_CAP);
+        lastRippleX = X; lastRippleY = Y; lastRippleT = wallNow;
+      }
+    }
+    trailSamples.push({ born: wallNow, x: X, y: Y });
+    if (trailSamples.length > TRAIL_RING) trailSamples.shift();
+  }
+  function onPointerLeave() { pointer.active = false; }
+
+  function init() {
+    reducedMotion = prefersReducedMotion();
+    resizeCanvas();
+    bgCanvas = makeBg(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight);
+    resetParticles();
+    entryPhase = 0;
+
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      bgCanvas = makeBg(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight);
+      drawStatic();
+    });
+
+    const mm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    mm.addEventListener("change", () => {
+      reducedMotion = mm.matches;
+      cancelAnimationFrame(raf);
+      if (reducedMotion) drawStatic();
+      else { loop.prev = performance.now(); raf = requestAnimationFrame(loop); }
+    });
+
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerleave", onPointerLeave);
+    canvas.addEventListener("pointercancel", onPointerLeave);
+
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
+    io.observe(canvas);
+
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) loop.prev = performance.now(); });
+
+    if (reducedMotion) drawStatic();
+    else { loop.prev = performance.now(); raf = requestAnimationFrame(loop); }
+  }
+
+  function replay() {
+    resetParticles();
+    entryPhase = 0;
+    if (reducedMotion) drawStatic();
+  }
+
+  document.getElementById("btn-replay-fab").addEventListener("click", replay);
+
+  init();
+})();
+  </script>
+</body>
+</html>
