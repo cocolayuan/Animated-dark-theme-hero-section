@@ -4,7 +4,13 @@ A full-screen hero section featuring a halftone dot-grid canvas animation with a
 
 ## Preview
 
-**[Live Demo →](https://animated-dark-theme-hero.vercel.app)**
+**Latest:** [Live Demo →](https://animated-dark-theme-hero.vercel.app)
+
+### Versions
+
+| Tag | Description | Commit |
+|---|---|---|
+| `green_linear_hero_bg` | Case deck auto-rotate + white glass header | [b676b37](https://github.com/cocolayuan/Animated-dark-theme-hero-section/commit/b676b37) |
 
 ## Features
 
