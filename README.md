@@ -10,6 +10,7 @@ A full-screen hero section featuring a halftone dot-grid canvas animation with a
 
 | Tag | Description | Commit |
 |---|---|---|
+| `silver_gradient` | EN/中 i18n toggle, silver gradient hero, new footer, unified titles | _latest_ |
 | `green_linear_hero_bg` | Case deck auto-rotate + white glass header | [b676b37](https://github.com/cocolayuan/Animated-dark-theme-hero-section/commit/b676b37) |
 
 ## Features

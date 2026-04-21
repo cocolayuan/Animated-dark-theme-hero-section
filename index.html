@@ -33,7 +33,7 @@
       height: 100svh;
       overflow: hidden;
       background:
-        linear-gradient(183deg, #C7E800 -2.04%, #4A7C00 37.67%, rgba(0,0,0,0) 95.75%),
+        url('page_1_bg_cropped.png') center/100% 100% no-repeat,
         #000;
     }
 
@@ -106,24 +106,31 @@
       z-index: 10;
       text-align: center;
       pointer-events: none;
-      white-space: nowrap;
-      padding: clamp(20px, 3.5vh, 40px) clamp(32px, 4vw, 72px);
-      border-radius: 300px;
-      background: rgba(16, 24, 4, 0.10);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
+      padding: clamp(40px, 8vh, 80px) clamp(40px, 6vw, 120px);
       opacity: 0;
       animation: containerReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       animation-delay: 3s;
     }
+    .hero-content::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(420px, 52vw, 744px);
+      height: clamp(200px, 32vh, 268px);
+      background: rgba(255, 255, 255, 0.6);
+      filter: blur(50px);
+      border-radius: 300px;
+      z-index: -1;
+    }
 
     .hero-title {
-      font-size: clamp(26px, 3.8vw, 46px);
-      font-weight: 700;
-      line-height: 1.22;
-      color: #fff;
-      letter-spacing: -0.01em;
-      text-shadow: 0 2px 32px rgba(0,0,0,0.6);
+      font-family: 'PingFang SC', var(--font-body);
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 600;
+      line-height: 1.17;
+      color: #000;
+      letter-spacing: 0;
       opacity: 0;
       animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       animation-delay: 3s;
@@ -141,11 +148,50 @@
       animation-delay: 3.25s;
     }
 
+    .brush-hl {
+      position: relative;
+      display: inline-block;
+      padding: 0 0.1em;
+    }
+    .brush-hl::before {
+      content: '';
+      position: absolute;
+      left: 4%; right: -52%;
+      top: 50%;
+      height: 160%;
+      transform: translateY(-50%);
+      background: url('vector_brush_cropped.png') center/100% 100% no-repeat;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero-enroll {
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-top: 24px;
+      padding: 16px 40px;
+      background: #D8F90A;
+      color: #000;
+      font-family: 'Inter', var(--font-body);
+      font-weight: 800;
+      font-size: 14px; line-height: 20px;
+      text-decoration: none;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(216, 249, 10, 0.3);
+      pointer-events: auto;
+      opacity: 0;
+      animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 4.4s;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .hero-enroll:hover { transform: translateY(-1px); box-shadow: 0 0 28px rgba(216, 249, 10, 0.55); }
+
     .hero-subtitle {
-      font-size: clamp(10px, 1vw, 14px);
-      color: rgba(255, 255, 255, 0.5);
-      margin-top: 16px;
-      letter-spacing: 0.02em;
+      font-family: 'PingFang SC', var(--font-body);
+      font-size: clamp(14px, 1.4vw, 24px);
+      font-weight: 300;
+      color: #797979;
+      margin-top: 12px;
+      letter-spacing: 0;
       opacity: 0;
       animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       animation-delay: 3.5s;
@@ -210,7 +256,8 @@
 
     /* ===== Top Nav (1920 responsive) ===== */
     .top-nav {
-      position: fixed; top: 16px; left: clamp(16px, 3vw, 40px); right: clamp(16px, 3vw, 40px); z-index: 100;
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      width: 70%; max-width: 1344px; z-index: 100;
       height: 64px; display: flex; align-items: center; justify-content: space-between;
       padding: 0 clamp(18px, 2.4vw, 32px);
       border-radius: 100px;
@@ -237,6 +284,30 @@
     }
     .lang-btn:hover { color: #fff; }
     .lang-btn.active { background: var(--lime); color: var(--ink); }
+
+    /* ===== i18n toggle ===== */
+    body:not(.lang-en) .i18n-en { display: none !important; }
+    body.lang-en .i18n-zh { display: none !important; }
+
+    /* EN title typography */
+    body.lang-en .hero-title,
+    body.lang-en .h-title,
+    body.lang-en .final-card h2 {
+      font-family: 'Geist', ui-sans-serif, sans-serif;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+    }
+    body.lang-en .emph {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.2em;
+      letter-spacing: -0.02em;
+    }
+    body.lang-en .hero-title .emph {
+      font-weight: 500;
+      font-size: 1.44em;
+    }
     .lang-sep { width: 1px; height: 14px; background: rgba(255,255,255,0.12); }
     .top-nav nav { display: flex; gap: clamp(16px, 2vw, 36px); }
     .top-nav nav a {
@@ -264,7 +335,7 @@
     .screen {
       position: relative; width: 100%; min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
-      padding: 120px clamp(24px, 6vw, 120px) 80px;
+      padding: 200px clamp(24px, 6vw, 120px) 160px;
       background: var(--page); color: var(--text);
       overflow: hidden;
     }
@@ -273,9 +344,17 @@
       display: inline-block; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
       color: var(--lime); font-weight: 600; margin-bottom: 18px;
     }
+    @keyframes titleReveal {
+      from { opacity: 0; transform: translateY(32px); filter: blur(6px); }
+      to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+    }
     .h-title {
-      font-family: var(--font-display); font-size: clamp(40px, 5vw, 76px);
+      font-family: var(--font-display); font-size: clamp(32px, 4vw, 61px);
       line-height: 1.05; letter-spacing: -0.015em; color: #fff; margin-bottom: 18px;
+      opacity: 0;
+    }
+    .h-title.in-view {
+      animation: titleReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
     .h-sub { font-size: clamp(15px, 1.15vw, 19px); color: var(--text-2); line-height: 1.6; max-width: 760px; }
     .center { text-align: center; margin-left: auto; margin-right: auto; }
@@ -522,7 +601,7 @@
       background: var(--lime); border-radius: 28px; padding: 80px 48px; text-align: center;
       box-shadow: 0 40px 120px rgba(220,255,0,0.15);
     }
-    .final-card h2 { font-family: var(--font-display); color: var(--ink-2); font-size: clamp(44px, 5.5vw, 84px); line-height: 1.02; letter-spacing: -0.02em; margin-bottom: 18px; }
+    .final-card h2 { font-family: var(--font-display); color: var(--ink-2); font-size: clamp(32px, 4vw, 61px); line-height: 1.05; letter-spacing: -0.015em; margin-bottom: 18px; }
     .final-card p { color: var(--ink-2); font-size: 18px; line-height: 1.55; max-width: 620px; margin: 0 auto 36px; opacity: 0.85; }
     .final-card .btn-primary { background: var(--ink); color: var(--lime); }
     .final-card .btn-primary:hover { background: #000; }
@@ -532,15 +611,36 @@
     /* ===== Footer ===== */
     .footer {
       background: #080808; border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 64px clamp(24px, 6vw, 120px) 40px; text-align: center; color: #fff;
+      padding: 72px clamp(32px, 6vw, 120px) 40px; color: #fff;
     }
-    .footer .wordmark { font-family: var(--font-display); font-size: 32px; margin-bottom: 24px; color: #fff; text-decoration: none; display: inline-block; transition: color .2s; }
-    .footer .wordmark:hover { color: var(--lime); }
-    .footer .mini { font-size: 12px; color: var(--muted); line-height: 1.6; max-width: 520px; margin: 0 auto 24px; }
-    .footer .links { font-size: 12px; margin: 20px 0; color: var(--divider); }
-    .footer .links a { color: #fff; text-decoration: none; padding: 0 8px; }
-    .footer .links a:hover { text-decoration: underline; }
-    .footer .copyright { font-size: 12px; color: rgba(255,255,255,0.7); }
+    .footer-inner {
+      max-width: 1440px; margin: 0 auto;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; flex-wrap: wrap;
+    }
+    .footer .brand-col { display: flex; flex-direction: column; gap: 24px; }
+    .footer .brand-mark { height: 36px; width: auto; object-fit: contain; }
+    .footer .socials { display: flex; gap: 12px; }
+    .footer .socials a {
+      width: 38px; height: 38px; border-radius: 999px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.72);
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .footer .socials a:hover { background: var(--lime); color: var(--ink); border-color: var(--lime); }
+    .footer .socials svg { width: 16px; height: 16px; }
+    .footer-links { display: flex; flex-direction: column; gap: 14px; text-align: right; }
+    .footer-links .col-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 6px; letter-spacing: 0.02em; }
+    .footer-links a { font-size: 14px; color: rgba(255,255,255,0.7); text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer .copyright {
+      max-width: 1440px; margin: 48px auto 0; padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px; color: rgba(255,255,255,0.5);
+    }
+    @media (max-width: 640px) {
+      .footer-inner { flex-direction: column; gap: 32px; }
+      .footer-links { text-align: left; }
+    }
 
     /* ===== Floating logo on scroll ===== */
     .float-logo {
@@ -584,20 +684,20 @@
     }
   </style>
 </head>
-<body>
+<body class="lang-en">
 
   <!-- ===== TOP NAV — logo + lang toggle + login ===== -->
   <header class="top-nav" id="topNav">
     <a href="#" class="brand" aria-label="marketrack">
-      <img class="brand-mark" src="marketrack-logo.png" alt="marketrack" />
+      <img class="brand-mark" id="navLogo" src="marketrack-logo.png" alt="marketrack" />
     </a>
     <div class="actions">
       <div class="lang-toggle" role="tablist" aria-label="Language">
-        <button class="lang-btn active" data-lang="zh">中</button>
+        <button class="lang-btn active" data-lang="en">EN</button>
         <span class="lang-sep"></span>
-        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="zh">中</button>
       </div>
-      <a href="#" class="nav-cta">登录</a>
+      <a href="#" class="nav-cta"><span class="i18n-zh">登录</span><span class="i18n-en">Log in</span></a>
     </div>
   </header>
 
@@ -623,19 +723,15 @@
 
     <!-- Text overlay -->
     <div class="hero-content">
-      <h1 class="hero-title display">
-        你的每一次营销决策<br>都能有据可查
+      <h1 class="hero-title display i18n-zh">
+        你的每一次<span class="brush-hl">营销决策</span><br>都有据可查
       </h1>
-    </div>
-
-    <div class="hero-below">
-      <div class="hero-sub-copy">从诊断到供应商匹配到归因，全链路数据支撑</div>
-      <div class="hero-ctas">
-        <a class="btn-primary" href="#final">开始我的营销诊断
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </a>
-        <a class="btn-secondary" href="#final">预约演示</a>
-      </div>
+      <h1 class="hero-title i18n-en">
+        <span class="emph">Every<br>marketing <span class="brush-hl">decision</span></span>,<br>backed by data
+      </h1>
+      <div class="hero-subtitle i18n-zh">从供应商匹配到归因,全链路数据支撑</div>
+      <div class="hero-subtitle i18n-en">From supplier matching to attribution — end-to-end data support.</div>
+      <a class="hero-enroll" href="#final"><span class="i18n-zh">预约演示</span><span class="i18n-en">Enroll Now</span></a>
     </div>
 
   </section>
@@ -645,8 +741,10 @@
     <div class="screen-inner">
       <div style="text-align:center;">
         <span class="eyebrow">SYSTEM</span>
-        <h2 class="h-title">你的营销课题是什么，<br/>marketrack 就解决什么</h2>
-        <p class="h-sub center" style="text-align:center;">品类数据 × 供应商能力模型 — 每个课题对应一套精准的执行组合。</p>
+        <h2 class="h-title i18n-zh">你的营销课题是什么,<br/>marketrack 就解决什么</h2>
+        <h2 class="h-title i18n-en">Whatever your marketing <span class="emph">challenge</span>,<br/>marketrack solves it</h2>
+        <p class="h-sub center i18n-zh" style="text-align:center;">品类数据 × 供应商能力模型 — 每个课题对应一套精准的执行组合。</p>
+        <p class="h-sub center i18n-en" style="text-align:center;">Category data × supplier capability models — a precise execution mix for every brief.</p>
       </div>
       <div class="image-stage">
         <video autoplay muted loop playsinline preload="auto"
@@ -660,33 +758,35 @@
     <div class="screen-inner">
       <div style="text-align:center;">
         <span class="eyebrow">WORKFLOW</span>
-        <h2 class="h-title">marketrack 帮你做决策</h2>
-        <p class="h-sub center" style="text-align:center;">需求建模 · 供应商评估 · 策略推演 · 效果归因，四层数据闭环。</p>
+        <h2 class="h-title i18n-zh">marketrack 帮你做决策</h2>
+        <h2 class="h-title i18n-en">marketrack helps you <span class="emph">decide</span></h2>
+        <p class="h-sub center i18n-zh" style="text-align:center;">需求建模 · 供应商评估 · 策略推演 · 效果归因,四层数据闭环。</p>
+        <p class="h-sub center i18n-en" style="text-align:center;">Briefing · Supplier scoring · Strategy simulation · Attribution — a closed four-layer data loop.</p>
       </div>
       <div class="workflow">
         <div class="tab-list" id="tabList">
           <div class="tab active" data-i="0">
-            <h5><span class="idx">01</span>需求建模</h5>
-            <p class="short">多轮对话，精准描绘营销需求画像</p>
-            <p class="long">通过多轮智能对话，AI 深度理解您的项目背景、行业特点、预算范围及具体需求偏好，生成结构化需求模型。</p>
+            <h5><span class="idx">01</span><span class="i18n-zh">需求建模</span><span class="i18n-en">Briefing</span></h5>
+            <p class="short"><span class="i18n-zh">多轮对话,精准描绘营销需求画像</span><span class="i18n-en">Multi-turn dialogue captures your brief precisely.</span></p>
+            <p class="long"><span class="i18n-zh">通过多轮智能对话,AI 深度理解您的项目背景、行业特点、预算范围及具体需求偏好,生成结构化需求模型。</span><span class="i18n-en">Through multi-turn AI conversation, we deeply understand your project context, industry, budget and preferences to generate a structured brief model.</span></p>
             <div class="progress"></div>
           </div>
           <div class="tab" data-i="1">
-            <h5><span class="idx">02</span>供应商评估</h5>
-            <p class="short">多维数据交叉，量化供应商能力</p>
-            <p class="long">利用 AI 技术从行业经验、能力匹配、资源覆盖、历史表现等维度进行多层交叉分析，输出供应商能力评分。</p>
+            <h5><span class="idx">02</span><span class="i18n-zh">供应商评估</span><span class="i18n-en">Supplier Scoring</span></h5>
+            <p class="short"><span class="i18n-zh">多维数据交叉,量化供应商能力</span><span class="i18n-en">Cross-dimensional data quantifies supplier capability.</span></p>
+            <p class="long"><span class="i18n-zh">利用 AI 技术从行业经验、能力匹配、资源覆盖、历史表现等维度进行多层交叉分析,输出供应商能力评分。</span><span class="i18n-en">AI cross-analyzes industry experience, capability fit, resource coverage and historical performance to output a capability score.</span></p>
             <div class="progress"></div>
           </div>
           <div class="tab" data-i="2">
-            <h5><span class="idx">03</span>策略推演</h5>
-            <p class="short">模拟执行路径，预判投放效果</p>
-            <p class="long">基于品类数据与供应商能力模型，推演最优执行组合与预期效果，降低决策风险。</p>
+            <h5><span class="idx">03</span><span class="i18n-zh">策略推演</span><span class="i18n-en">Strategy Simulation</span></h5>
+            <p class="short"><span class="i18n-zh">模拟执行路径,预判投放效果</span><span class="i18n-en">Simulate execution paths and forecast outcomes.</span></p>
+            <p class="long"><span class="i18n-zh">基于品类数据与供应商能力模型,推演最优执行组合与预期效果,降低决策风险。</span><span class="i18n-en">Using category data and supplier models, we simulate the optimal execution mix and expected results to reduce decision risk.</span></p>
             <div class="progress"></div>
           </div>
           <div class="tab" data-i="3">
-            <h5><span class="idx">04</span>效果归因</h5>
-            <p class="short">闭环追踪，量化每一分投入的回报</p>
-            <p class="long">项目完成后自动回收效果数据，对比预测与实际表现，持续优化未来的匹配与投放策略。</p>
+            <h5><span class="idx">04</span><span class="i18n-zh">效果归因</span><span class="i18n-en">Attribution</span></h5>
+            <p class="short"><span class="i18n-zh">闭环追踪,量化每一分投入的回报</span><span class="i18n-en">Closed-loop tracking quantifies return on every dollar.</span></p>
+            <p class="long"><span class="i18n-zh">项目完成后自动回收效果数据,对比预测与实际表现,持续优化未来的匹配与投放策略。</span><span class="i18n-en">Post-campaign, data is auto-collected and compared against predictions to continuously optimize future matching and strategy.</span></p>
             <div class="progress"></div>
           </div>
         </div>
@@ -704,12 +804,12 @@
               </div>
             </div>
             <div class="chat-messages">
-              <div class="msg user"><div class="bubble">我需要为一款新的美妆产品做社交媒体推广，预算大概 50 万左右</div></div>
-              <div class="msg bot"><div class="av">🤖</div><div class="bubble">好的，我来帮您建模。请问目标平台是小红书、抖音还是全渠道？主要面向什么年龄段？</div></div>
-              <div class="msg user"><div class="bubble">主要是小红书和抖音，面向 18-30 岁的年轻女性</div></div>
+              <div class="msg user"><div class="bubble"><span class="i18n-zh">我需要为一款新的美妆产品做社交媒体推广,预算大概 50 万左右</span><span class="i18n-en">I need social media promotion for a new beauty product, budget around ¥500k.</span></div></div>
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble"><span class="i18n-zh">好的,我来帮您建模。请问目标平台是小红书、抖音还是全渠道?主要面向什么年龄段?</span><span class="i18n-en">Got it. Should we target Xiaohongshu, Douyin, or all channels? And what's the age range?</span></div></div>
+              <div class="msg user"><div class="bubble"><span class="i18n-zh">主要是小红书和抖音,面向 18-30 岁的年轻女性</span><span class="i18n-en">Mainly Xiaohongshu and Douyin — women aged 18–30.</span></div></div>
             </div>
             <div class="chat-input">
-              <input placeholder="输入您的需求..." disabled/>
+              <input class="chat-ph" data-ph-zh="输入您的需求..." data-ph-en="Type your brief..." placeholder="输入您的需求..." disabled/>
               <button class="send-btn" aria-label="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
             </div>
             <div class="chat-gradient"></div>
@@ -722,15 +822,12 @@
             </div>
             <div class="chat-messages">
               <div class="msg bot"><div class="av">🤖</div><div class="bubble">
-                已完成供应商能力评估，核心维度如下：<br/><br/>
-                - 行业经验：美妆个护 3 年+<br/>
-                - 平台能力：小红书种草 + 抖音短视频<br/>
-                - 资源覆盖：KOL 矩阵 500+<br/>
-                - 历史表现：同品类 ROI 均值 3.2
+                <span class="i18n-zh">已完成供应商能力评估,核心维度如下:<br/><br/>- 行业经验:美妆个护 3 年+<br/>- 平台能力:小红书种草 + 抖音短视频<br/>- 资源覆盖:KOL 矩阵 500+<br/>- 历史表现:同品类 ROI 均值 3.2</span>
+                <span class="i18n-en">Supplier capability assessment done. Key dimensions:<br/><br/>• Industry experience: 3+ yrs in beauty<br/>• Platform capability: Xiaohongshu seeding + Douyin shorts<br/>• Resource coverage: 500+ KOL network<br/>• Historical performance: category ROI avg 3.2</span>
               </div></div>
-              <div class="msg bot"><div class="av">🤖</div><div class="bubble">综合评分 Top 3 供应商已生成，正在进入策略推演阶段…</div></div>
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble"><span class="i18n-zh">综合评分 Top 3 供应商已生成,正在进入策略推演阶段…</span><span class="i18n-en">Top 3 suppliers ranked. Moving to strategy simulation…</span></div></div>
             </div>
-            <div class="chat-input"><input placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
+            <div class="chat-input"><input class="chat-ph" data-ph-zh="输入您的需求..." data-ph-en="Type your brief..." placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
             <div class="chat-gradient"></div>
           </div>
           <!-- Panel 03 -->
@@ -741,15 +838,11 @@
             </div>
             <div class="chat-messages">
               <div class="msg bot"><div class="av">🤖</div><div class="bubble">
-                基于品类数据与供应商能力模型，推演出最优执行路径：<br/><br/>
-                方案 A：小红书种草 + 抖音信息流<br/>
-                预期 CPE ¥2.8 | 曝光 500 万+<br/><br/>
-                方案 B：KOL 矩阵 + 素人铺量<br/>
-                预期 CPE ¥3.5 | 互动率 8%+<br/><br/>
-                推荐方案 A，预计 ROI 3.6
+                <span class="i18n-zh">基于品类数据与供应商能力模型,推演出最优执行路径:<br/><br/>方案 A:小红书种草 + 抖音信息流<br/>预期 CPE ¥2.8 | 曝光 500 万+<br/><br/>方案 B:KOL 矩阵 + 素人铺量<br/>预期 CPE ¥3.5 | 互动率 8%+<br/><br/>推荐方案 A,预计 ROI 3.6</span>
+                <span class="i18n-en">Based on category data and supplier models, the optimal paths:<br/><br/>Plan A: Xiaohongshu seeding + Douyin feed<br/>Forecast CPE ¥2.8 | Impressions 5M+<br/><br/>Plan B: KOL network + micro-influencers<br/>Forecast CPE ¥3.5 | Engagement 8%+<br/><br/>Recommended: Plan A, projected ROI 3.6</span>
               </div></div>
             </div>
-            <div class="chat-input"><input placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
+            <div class="chat-input"><input class="chat-ph" data-ph-zh="输入您的需求..." data-ph-en="Type your brief..." placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
             <div class="chat-gradient"></div>
           </div>
           <!-- Panel 04 -->
@@ -760,15 +853,12 @@
             </div>
             <div class="chat-messages">
               <div class="msg bot"><div class="av">🤖</div><div class="bubble">
-                项目执行完毕，效果归因报告已生成：<br/><br/>
-                - 实际 ROI：3.8（超预期 5.6%）<br/>
-                - 曝光量：620 万<br/>
-                - 种草转化率：12.3%<br/>
-                - 关键归因：小红书笔记 Top 10 贡献 43% 转化
+                <span class="i18n-zh">项目执行完毕,效果归因报告已生成:<br/><br/>- 实际 ROI:3.8(超预期 5.6%)<br/>- 曝光量:620 万<br/>- 种草转化率:12.3%<br/>- 关键归因:小红书笔记 Top 10 贡献 43% 转化</span>
+                <span class="i18n-en">Campaign complete. Attribution report ready:<br/><br/>• Actual ROI: 3.8 (5.6% above target)<br/>• Impressions: 6.2M<br/>• Seeding conversion: 12.3%<br/>• Key driver: Top 10 Xiaohongshu posts drove 43% of conversions</span>
               </div></div>
-              <div class="msg bot"><div class="av">🤖</div><div class="bubble">已将本次数据沉淀至品类知识库，下次同品类匹配精度将进一步提升。</div></div>
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble"><span class="i18n-zh">已将本次数据沉淀至品类知识库,下次同品类匹配精度将进一步提升。</span><span class="i18n-en">Data has been added to the category knowledge base — next match in this category will be even sharper.</span></div></div>
             </div>
-            <div class="chat-input"><input placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
+            <div class="chat-input"><input class="chat-ph" data-ph-zh="输入您的需求..." data-ph-en="Type your brief..." placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
             <div class="chat-gradient"></div>
           </div>
         </div>
@@ -781,28 +871,30 @@
     <div class="screen-inner">
       <div style="text-align:center;">
         <span class="eyebrow">CASES</span>
-        <h2 class="h-title">marketrack 服务品牌案例</h2>
-        <p class="h-sub center" style="text-align:center;">每一个项目，都是一次可复盘、可迭代的营销积累。</p>
+        <h2 class="h-title i18n-zh">marketrack 服务品牌案例</h2>
+        <h2 class="h-title i18n-en">Brands we've <span class="emph">served</span></h2>
+        <p class="h-sub center i18n-zh" style="text-align:center;">每一个项目,都是一次可复盘、可迭代的营销积累。</p>
+        <p class="h-sub center i18n-en" style="text-align:center;">Every project is a replayable, iterable marketing asset.</p>
       </div>
       <div class="case-deck" id="caseDeck">
         <div class="case-page active" data-page="0">
           <a class="case-item" href="#">
             <img src="金典.jpg" alt="金典"/>
             <div class="case-overlay">
-              <div class="case-top"><span class="tag">食品饮料</span><span class="brand">#金典</span></div>
+              <div class="case-top"><span class="tag"><span class="i18n-zh">食品饮料</span><span class="i18n-en">Food & Beverage</span></span><span class="brand">#SATINE</span></div>
               <div class="case-bottom">
-                <h3>用专业 AI 全程落地</h3>
-                <p>视觉建立鲜活信任，草原呼吸触发感官联想。</p>
+                <h3><span class="i18n-zh">用专业 AI 全程落地</span><span class="i18n-en">Expert AI, end to end</span></h3>
+                <p><span class="i18n-zh">视觉建立鲜活信任,草原呼吸触发感官联想。</span><span class="i18n-en">Vivid visuals build trust; grassland breath triggers sensory memory.</span></p>
               </div>
             </div>
           </a>
           <a class="case-item" href="#">
             <img src="f1 & miniso.jpg" alt="F1 × MINISO"/>
             <div class="case-overlay">
-              <div class="case-top"><span class="tag">服饰潮流</span><span class="brand">#F1 × MINISO</span></div>
+              <div class="case-top"><span class="tag"><span class="i18n-zh">服饰潮流</span><span class="i18n-en">Apparel & Trend</span></span><span class="brand">#F1 × MINISO</span></div>
               <div class="case-bottom">
-                <h3>联名的价值，在于 1+1&gt;2</h3>
-                <p>跨界 IP 叠加品牌势能，社媒声量增长 3.2 倍。</p>
+                <h3><span class="i18n-zh">联名的价值,在于 1+1&gt;2</span><span class="i18n-en">A collab pays off when 1+1&gt;2</span></h3>
+                <p><span class="i18n-zh">跨界 IP 叠加品牌势能,社媒声量增长 3.2 倍。</span><span class="i18n-en">Cross-IP stacking amplified brand momentum — 3.2× social lift.</span></p>
               </div>
             </div>
           </a>
@@ -811,20 +903,20 @@
           <a class="case-item" href="#">
             <img src="Miniso × 疯狂动物城2.jpg" alt="MINISO × 疯狂动物城2"/>
             <div class="case-overlay">
-              <div class="case-top"><span class="tag">服饰潮流</span><span class="brand">#MINISO × 疯狂动物城 2</span></div>
+              <div class="case-top"><span class="tag"><span class="i18n-zh">服饰潮流</span><span class="i18n-en">Apparel & Trend</span></span><span class="brand"><span class="i18n-zh">#MINISO × 疯狂动物城 2</span><span class="i18n-en">#MINISO × Zootopia 2</span></span></div>
               <div class="case-bottom">
-                <h3>潮牌店铺，嵌入 IP 投射</h3>
-                <p>线下主题店 × 线上内容共振，单店客流 +180%。</p>
+                <h3><span class="i18n-zh">潮牌店铺,嵌入 IP 投射</span><span class="i18n-en">IP-embedded retail experiences</span></h3>
+                <p><span class="i18n-zh">线下主题店 × 线上内容共振,单店客流 +180%。</span><span class="i18n-en">Themed stores × online content resonance — +180% store footfall.</span></p>
               </div>
             </div>
           </a>
           <a class="case-item" href="#">
             <img src="伊利金典来财小牛.jpg" alt="伊利金典来财小牛"/>
             <div class="case-overlay">
-              <div class="case-top"><span class="tag">食品饮料</span><span class="brand">#伊利金典·来财小牛</span></div>
+              <div class="case-top"><span class="tag"><span class="i18n-zh">食品饮料</span><span class="i18n-en">Food & Beverage</span></span><span class="brand"><span class="i18n-zh">#伊利金典·来财小牛</span><span class="i18n-en">#Yili SATINE · Lucky Calf</span></span></div>
               <div class="case-bottom">
-                <h3>情绪赛道的春节决战</h3>
-                <p>AI 编撰活人感故事，春节档互动率 TOP 1。</p>
+                <h3><span class="i18n-zh">情绪赛道的春节决战</span><span class="i18n-en">Winning the emotion lane at Lunar New Year</span></h3>
+                <p><span class="i18n-zh">AI 编撰活人感故事,春节档互动率 TOP 1。</span><span class="i18n-en">AI-crafted human stories — #1 engagement rate over the festival window.</span></p>
               </div>
             </div>
           </a>
@@ -833,20 +925,20 @@
           <a class="case-item" href="#">
             <img src="xicha.jpg" alt="喜茶"/>
             <div class="case-overlay">
-              <div class="case-top"><span class="tag">食品饮料</span><span class="brand">#喜茶</span></div>
+              <div class="case-top"><span class="tag"><span class="i18n-zh">食品饮料</span><span class="i18n-en">Food & Beverage</span></span><span class="brand"><span class="i18n-zh">#喜茶</span><span class="i18n-en">#HEYTEA</span></span></div>
               <div class="case-bottom">
-                <h3>每一杯灵感，都是一次品类实验</h3>
-                <p>社媒锚定 Z 世代，新品首周售出 150 万杯。</p>
+                <h3><span class="i18n-zh">每一杯灵感,都是一次品类实验</span><span class="i18n-en">Every cup of inspiration is a category experiment</span></h3>
+                <p><span class="i18n-zh">社媒锚定 Z 世代,新品首周售出 150 万杯。</span><span class="i18n-en">Anchored on Gen Z via social — 1.5M cups sold in launch week.</span></p>
               </div>
             </div>
           </a>
           <a class="case-item" href="#">
             <img src="maogeping.jpg" alt="毛戈平敦煌飞天"/>
             <div class="case-overlay">
-              <div class="case-top"><span class="tag">美妆个护</span><span class="brand">#毛戈平·敦煌飞天</span></div>
+              <div class="case-top"><span class="tag"><span class="i18n-zh">美妆个护</span><span class="i18n-en">Beauty & Personal Care</span></span><span class="brand"><span class="i18n-zh">#毛戈平·敦煌飞天</span><span class="i18n-en">#MAOGEPING · Dunhuang Flying Apsaras</span></span></div>
               <div class="case-bottom">
-                <h3>让东方美学在数字时代重生</h3>
-                <p>敦煌 IP 叙事，高端线 GMV 环比 +68%。</p>
+                <h3><span class="i18n-zh">让东方美学在数字时代重生</span><span class="i18n-en">Reviving Eastern aesthetics in the digital era</span></h3>
+                <p><span class="i18n-zh">敦煌 IP 叙事,高端线 GMV 环比 +68%。</span><span class="i18n-en">Dunhuang IP storytelling — +68% QoQ GMV on the premium line.</span></p>
               </div>
             </div>
           </a>
@@ -864,13 +956,15 @@
   <section class="screen" id="final">
     <div class="screen-inner">
       <div class="final-card">
-        <h2>现在，把营销的事<br/>交给 marketrack</h2>
-        <p>描述你的营销目标，3 轮对话完成需求建模。</p>
+        <h2 class="i18n-zh">现在,把营销的事<br/>交给 marketrack</h2>
+        <h2 class="i18n-en">Let marketrack <span class="emph">handle</span><br/>your marketing</h2>
+        <p class="i18n-zh">描述你的营销目标,3 轮对话完成需求建模。</p>
+        <p class="i18n-en">Describe your goal — three dialogues to a complete brief.</p>
         <div class="cta-row center">
-          <a class="btn-primary" href="#">开始我的营销诊断
+          <a class="btn-primary" href="#"><span class="i18n-zh">开始我的营销诊断</span><span class="i18n-en">Start my diagnosis</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
-          <a class="btn-secondary" href="#">预约演示</a>
+          <a class="btn-secondary" href="#"><span class="i18n-zh">预约演示</span><span class="i18n-en">Book a demo</span></a>
         </div>
       </div>
     </div>
@@ -878,18 +972,31 @@
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
-    <a href="#" class="wordmark display">marketrack</a>
-    <p class="mini">从诊断到供应商匹配到归因，marketrack 为品牌营销决策提供全链路数据支撑。</p>
-    <div style="display:flex;justify-content:center;margin:20px 0;">
-      <div style="height:1px;width:96px;background:rgba(255,255,255,0.2);"></div>
+    <div class="footer-inner">
+      <div class="brand-col">
+        <a href="#"><img class="brand-mark" src="logo绿.png" alt="marketrack" /></a>
+        <div class="socials">
+          <a href="#" aria-label="X (Twitter)" title="X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" aria-label="Discord" title="Discord">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.369A19.8 19.8 0 0 0 15.432 3a13.6 13.6 0 0 0-.617 1.265 18.3 18.3 0 0 0-5.631 0A13 13 0 0 0 8.566 3a19.7 19.7 0 0 0-4.888 1.37C.566 9.046-.289 13.58.13 18.05a19.9 19.9 0 0 0 6.073 3.065 14.6 14.6 0 0 0 1.299-2.1 12.9 12.9 0 0 1-2.046-.98c.172-.126.34-.258.502-.392a14.22 14.22 0 0 0 12.086 0c.163.14.331.272.503.392a12.9 12.9 0 0 1-2.05.982 14.5 14.5 0 0 0 1.3 2.099 19.9 19.9 0 0 0 6.075-3.065c.49-5.177-.838-9.671-3.555-13.682M8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419s.955-2.42 2.157-2.42 2.176 1.095 2.157 2.42c0 1.334-.955 2.419-2.157 2.419m7.974 0c-1.183 0-2.157-1.085-2.157-2.419s.955-2.42 2.157-2.42 2.176 1.095 2.157 2.42c0 1.334-.955 2.419-2.157 2.419"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <span class="col-title"><span class="i18n-zh">产品</span><span class="i18n-en">Product</span></span>
+        <a href="#"><span class="i18n-zh">AI 智能匹配</span><span class="i18n-en">AI Matching</span></a>
+        <a href="#final"><span class="i18n-zh">预约演示</span><span class="i18n-en">Book a demo</span></a>
+      </div>
     </div>
-    <div class="links">
-      <a href="#">Support</a><span style="color:var(--divider);">|</span>
-      <a href="#">Privacy</a><span style="color:var(--divider);">|</span>
-      <a href="#">Terms</a><span style="color:var(--divider);">|</span>
-      <a href="#">Unsubscribe</a>
+    <div class="copyright">
+      <span class="i18n-zh">©2026 marketrack · 让每一次营销决策都有据可查</span>
+      <span class="i18n-en">©2026 marketrack · Every marketing decision, backed by data</span>
     </div>
-    <div class="copyright">©2026 marketrack · 让每一次营销决策都有据可查</div>
   </footer>
 
   <script>
@@ -1776,6 +1883,45 @@
     if (e.isIntersecting) startCaseTimer();
     else clearInterval(caseTimer);
   }, { threshold: 0.3 }).observe(s4);
+
+  // Reveal section titles on scroll
+  const titleIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); titleIO.unobserve(e.target); }
+    });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('.h-title').forEach(el => titleIO.observe(el));
+
+  // Language toggle (中 / EN)
+  const langBtns = document.querySelectorAll('.lang-btn');
+  const applyLang = (lang) => {
+    document.body.classList.toggle('lang-en', lang === 'en');
+    langBtns.forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.querySelectorAll('[data-ph-zh]').forEach(el => {
+      el.placeholder = el.getAttribute(lang === 'en' ? 'data-ph-en' : 'data-ph-zh') || '';
+    });
+    try { localStorage.setItem('mt_lang', lang); } catch(e) {}
+  };
+  langBtns.forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
+  try {
+    const saved = localStorage.getItem('mt_lang');
+    applyLang(saved === 'zh' ? 'zh' : 'en');
+  } catch(e) { applyLang('en'); }
+
+  // Swap nav logo: hero = default, past hero = logo宽 (white)
+  const navLogo = document.getElementById('navLogo');
+  const heroEl = document.querySelector('.hero');
+  if (navLogo && heroEl) {
+    const defaultSrc = 'marketrack-logo.png';
+    const whiteSrc = 'logo宽.png';
+    const updateLogo = () => {
+      const past = window.scrollY > heroEl.offsetHeight - 80;
+      const next = past ? whiteSrc : defaultSrc;
+      if (!navLogo.src.endsWith(next)) navLogo.src = next;
+    };
+    window.addEventListener('scroll', updateLogo, { passive: true });
+    updateLogo();
+  }
 
 })();
   </script>
