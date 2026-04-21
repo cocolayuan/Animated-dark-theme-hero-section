@@ -6,7 +6,7 @@
   <title>MarkeTrack — 你的每一次营销决策，都有据可查</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --foreground: #e8e8ea;
@@ -189,6 +189,372 @@
       }
     }
 
+    /* ===== Global tokens ===== */
+    :root {
+      --lime: #DCFF00;
+      --lime-alt: #D8F90A;
+      --lime-hover: #c9ea00;
+      --ink: #0A0A0A;
+      --ink-2: #1E1E1E;
+      --card: #111111;
+      --page: #050505;
+      --text: #F2F2F2;
+      --text-2: #E8E8E8;
+      --muted: #83837D;
+      --divider: #8F8E88;
+      --font-display: 'Instrument Serif', serif;
+      --font-body: 'Inter', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    }
+    body { font-family: var(--font-body); background: var(--page); }
+    .display { font-family: var(--font-display); letter-spacing: -0.01em; }
+
+    /* ===== Top Nav (1920 responsive) ===== */
+    .top-nav {
+      position: fixed; top: 16px; left: clamp(16px, 3vw, 40px); right: clamp(16px, 3vw, 40px); z-index: 100;
+      height: 64px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(18px, 2.4vw, 32px);
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(11px); -webkit-backdrop-filter: blur(11px);
+      border: 1px solid rgba(255,255,255,0.22);
+      transition: transform .4s ease, opacity .4s ease;
+    }
+    .top-nav .brand {
+      font-family: var(--font-display); font-size: 22px; color: #fff;
+      display: flex; align-items: center; gap: 10px; text-decoration: none;
+    }
+    .top-nav .brand-mark { height: 32px; width: auto; display: block; object-fit: contain; }
+    .lang-toggle {
+      display: inline-flex; align-items: center;
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 999px;
+      padding: 4px; background: rgba(255,255,255,0.03);
+    }
+    .lang-btn {
+      background: transparent; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500;
+      padding: 6px 14px; border-radius: 999px; transition: background .2s, color .2s;
+      font-family: inherit;
+    }
+    .lang-btn:hover { color: #fff; }
+    .lang-btn.active { background: var(--lime); color: var(--ink); }
+    .lang-sep { width: 1px; height: 14px; background: rgba(255,255,255,0.12); }
+    .top-nav nav { display: flex; gap: clamp(16px, 2vw, 36px); }
+    .top-nav nav a {
+      color: rgba(255,255,255,0.72); text-decoration: none; font-size: 14px; font-weight: 500;
+      transition: color .2s;
+    }
+    .top-nav nav a:hover { color: #fff; }
+    .top-nav .actions { display: flex; gap: 12px; align-items: center; }
+    .nav-cta {
+      background: var(--lime); color: var(--ink); font-weight: 700; font-size: 13px;
+      border-radius: 8px; padding: 10px 18px; border: none; cursor: pointer;
+      transition: transform .2s, background .2s; text-decoration: none;
+    }
+    .nav-cta:hover { background: var(--lime-hover); transform: translateY(-1px); }
+    .nav-ghost {
+      color: #fff; font-size: 13px; font-weight: 500; text-decoration: none; padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 8px; transition: background .2s;
+    }
+    .nav-ghost:hover { background: rgba(255,255,255,0.08); }
+    @media (max-width: 900px) {
+      .top-nav nav { display: none; }
+    }
+
+    /* ===== Section shell ===== */
+    .screen {
+      position: relative; width: 100%; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 120px clamp(24px, 6vw, 120px) 80px;
+      background: var(--page); color: var(--text);
+      overflow: hidden;
+    }
+    .screen-inner { width: 100%; max-width: 1440px; margin: 0 auto; }
+    .eyebrow {
+      display: inline-block; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--lime); font-weight: 600; margin-bottom: 18px;
+    }
+    .h-title {
+      font-family: var(--font-display); font-size: clamp(40px, 5vw, 76px);
+      line-height: 1.05; letter-spacing: -0.015em; color: #fff; margin-bottom: 18px;
+    }
+    .h-sub { font-size: clamp(15px, 1.15vw, 19px); color: var(--text-2); line-height: 1.6; max-width: 760px; }
+    .center { text-align: center; margin-left: auto; margin-right: auto; }
+
+    /* ===== Buttons ===== */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px; background: var(--lime);
+      color: var(--ink); font-weight: 700; font-size: 15px; border-radius: 10px;
+      padding: 14px 26px; border: none; cursor: pointer; text-decoration: none;
+      transition: transform .2s, background .2s;
+    }
+    .btn-primary:hover { background: var(--lime-hover); transform: translateY(-2px); }
+    .btn-primary svg { width: 18px; height: 18px; }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px; background: transparent;
+      color: #fff; font-weight: 600; font-size: 15px; border-radius: 10px;
+      padding: 13px 24px; border: 1px solid rgba(255,255,255,0.25); cursor: pointer;
+      text-decoration: none; transition: background .2s, border-color .2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.5); }
+    .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+    .cta-row.center { justify-content: center; }
+
+    /* ===== Hero CTA overlay additions ===== */
+    .hero-sub-copy {
+      margin-top: 18px; font-size: clamp(13px, 1vw, 16px); color: rgba(255,255,255,0.7);
+      letter-spacing: 0.01em; opacity: 0;
+      animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: 3.4s;
+    }
+    .hero-ctas {
+      margin-top: 28px; display: flex; gap: 14px; justify-content: center; pointer-events: auto;
+      opacity: 0; animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: 3.7s;
+    }
+    .hero-below {
+      position: absolute; left: 50%; bottom: clamp(80px, 12vh, 140px);
+      transform: translateX(-50%); z-index: 15; width: min(760px, calc(100vw - 48px));
+      text-align: center; pointer-events: none;
+    }
+    .hero-below .hero-sub-copy { margin-top: 0; color: rgba(255,255,255,0.82); font-size: clamp(14px, 1.1vw, 18px); }
+    .hero-below .hero-ctas { pointer-events: auto; }
+
+    /* ===== Screen 2 — capability grid ===== */
+    .cap-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 48px;
+    }
+    .cap-card {
+      background: var(--card); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 28px 24px; transition: transform .3s, border-color .3s, background .3s;
+    }
+    .cap-card:hover { transform: translateY(-4px); border-color: rgba(220,255,0,0.3); background: #141414; }
+    .cap-card .num { font-family: var(--font-display); font-size: 32px; color: var(--lime); line-height: 1; }
+    .cap-card h4 { font-size: 18px; font-weight: 600; margin: 14px 0 8px; color: #fff; }
+    .cap-card p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+    @media (max-width: 900px) { .cap-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .image-stage {
+      margin-top: 48px; width: 100%; aspect-ratio: 16 / 7;
+      border-radius: 20px; overflow: hidden; position: relative;
+      background: linear-gradient(135deg, #151515, #0a0a0a);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .image-stage::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 40%, rgba(220,255,0,0.18), transparent 50%),
+                  radial-gradient(circle at 75% 70%, rgba(100,120,255,0.14), transparent 55%);
+    }
+    .image-stage .placeholder-label {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.25); letter-spacing: 0.15em; font-size: 13px; z-index: 1;
+    }
+    .image-stage video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 2; display: block;
+    }
+    .image-stage::after { display: none; }
+
+    /* ===== Screen 3 — tabs + synced image ===== */
+    .workflow { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: stretch; margin-top: 56px; }
+    @media (max-width: 1024px) { .workflow { grid-template-columns: 1fr; align-items: center; } }
+    .tab-list { display: flex; flex-direction: column; justify-content: space-between; gap: 0; height: 100%; }
+    .tab {
+      position: relative; padding: 28px 26px; border-radius: 14px; cursor: pointer;
+      background: var(--card); border: 1px solid rgba(255,255,255,0.06);
+      transition: background .3s, border-color .3s;
+    }
+    .tab h5 { font-size: 16px; font-weight: 600; color: #fff; display: flex; gap: 12px; align-items: center; }
+    .tab h5 .idx { font-family: var(--font-display); color: var(--lime); width: 28px; font-size: 22px; }
+    .tab p { font-size: 14px; line-height: 1.55; margin-left: 40px; }
+    .tab p.short { color: var(--text-2); margin-top: 6px; }
+    .tab p.long {
+      color: var(--muted); margin-top: 0;
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height .5s ease, opacity .4s ease, margin-top .4s ease;
+    }
+    .tab.active { background: #161616; border-color: rgba(220,255,0,0.35); }
+    .tab.active p.long { max-height: 160px; margin-top: 8px; opacity: 1; }
+    .tab .progress { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--lime); width: 0; border-radius: 0 0 14px 14px; }
+    .tab.active .progress { animation: tabProgress 5s linear forwards; }
+    @keyframes tabProgress { from { width: 0; } to { width: 100%; } }
+    .tab-stage {
+      position: relative; aspect-ratio: 1 / 1; border-radius: 24px; overflow: hidden;
+      background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06);
+    }
+    .chat-panel {
+      position: absolute; inset: 0; opacity: 0; pointer-events: none;
+      transition: opacity .5s ease;
+      display: flex; flex-direction: column;
+      padding: 28px 28px 24px;
+    }
+    .chat-panel.active { opacity: 1; pointer-events: auto; }
+    .chat-panel[data-i="0"] { background: radial-gradient(circle at 30% 30%, rgba(220,255,0,0.18), transparent 55%), #0b0b0b; }
+    .chat-panel[data-i="1"] { background: radial-gradient(circle at 70% 40%, rgba(120,160,255,0.18), transparent 55%), #0b0b0b; }
+    .chat-panel[data-i="2"] { background: radial-gradient(circle at 40% 70%, rgba(255,140,200,0.16), transparent 55%), #0b0b0b; }
+    .chat-panel[data-i="3"] { background: radial-gradient(circle at 60% 60%, rgba(140,255,200,0.18), transparent 55%), #0b0b0b; }
+    .chat-gradient {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to bottom, rgba(11,11,11,0) 26.4%, rgba(11,11,11,0.65) 66.9%, rgba(11,11,11,0.9) 100%);
+    }
+
+    .chat-header {
+      display: flex; align-items: center; gap: 12px; padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 2;
+    }
+    .bot-avatar {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center; color: var(--lime);
+    }
+    .bot-avatar svg { width: 22px; height: 22px; }
+    .bot-meta .bot-name { font-weight: 700; font-size: 15px; color: #fff; }
+    .bot-meta .bot-status { font-size: 12px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+    .dot-g { width: 7px; height: 7px; border-radius: 50%; background: #2ecc71; box-shadow: 0 0 8px rgba(46,204,113,0.6); }
+
+    .chat-messages {
+      flex: 1; display: flex; flex-direction: column; gap: 14px;
+      padding: 20px 2px; overflow: hidden; position: relative; z-index: 2;
+    }
+    .msg { display: flex; align-items: flex-start; gap: 10px; max-width: 88%;
+      opacity: 0; transform: translateY(16px); }
+    .msg.bot { align-self: flex-start; }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+    .msg .av {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+    }
+    .msg .bubble {
+      padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.55;
+      word-break: break-word;
+    }
+    .msg.bot .bubble {
+      background: rgba(255,255,255,0.06); color: #F2F2F2;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top-left-radius: 4px;
+    }
+    .msg.user .bubble {
+      background: #F2F2F2; color: var(--ink);
+      border-top-right-radius: 4px; font-weight: 500;
+    }
+
+    .chat-panel.active .msg {
+      animation: msgSlideUp .55s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .chat-panel.active .msg:nth-child(1) { animation-delay: .25s; }
+    .chat-panel.active .msg:nth-child(2) { animation-delay: 1.5s; }
+    .chat-panel.active .msg:nth-child(3) { animation-delay: 2.9s; }
+    .chat-panel.active .msg:nth-child(4) { animation-delay: 4.0s; }
+    @keyframes msgSlideUp {
+      from { opacity: 0; transform: translateY(16px); filter: blur(2px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    .chat-input {
+      position: relative; z-index: 3;
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 10px 10px 10px 16px; margin-top: 12px;
+    }
+    .chat-input input {
+      flex: 1; background: transparent; border: none; outline: none;
+      color: #fff; font-size: 14px; font-family: inherit;
+    }
+    .chat-input input::placeholder { color: rgba(255,255,255,0.4); }
+    .send-btn {
+      width: 40px; height: 40px; border-radius: 10px; border: none;
+      background: #F2F2F2; color: var(--ink); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .send-btn svg { width: 18px; height: 18px; }
+
+    /* ===== Screen 4 — case deck (pager) ===== */
+    .case-deck { position: relative; margin-top: 56px; }
+    .case-page {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+      opacity: 0; pointer-events: none; position: absolute; inset: 0;
+      transition: opacity .7s ease;
+    }
+    .case-page.active { opacity: 1; pointer-events: auto; position: relative; }
+    @media (max-width: 640px) { .case-page { grid-template-columns: 1fr; } }
+    .case-dots {
+      display: flex; justify-content: center; gap: 10px; margin-top: 32px;
+    }
+    .case-dots .dot {
+      width: 22px; height: 6px; border-radius: 4px;
+      background: rgba(255,255,255,0.15); transition: background .35s, width .35s;
+      cursor: pointer;
+    }
+    .case-dots .dot.active { background: var(--lime); width: 32px; }
+    .case-item {
+      position: relative; aspect-ratio: 16 / 10; border-radius: 18px; overflow: hidden;
+      background: #101010; border: 1px solid rgba(255,255,255,0.06);
+      text-decoration: none; display: block; isolation: isolate;
+    }
+    .case-item img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; transition: transform .6s cubic-bezier(0.22,1,0.36,1);
+      z-index: 1;
+    }
+    .case-item:hover img { transform: scale(1.2); }
+    .case-item.placeholder-c5 { background: linear-gradient(135deg, #3a1b2e 0%, #0b0b0b 100%); }
+    .case-item.placeholder-c6 { background: radial-gradient(circle at 40% 35%, rgba(220,180,80,0.35), transparent 60%), linear-gradient(135deg, #2a1a0a 0%, #0b0b0b 100%); }
+    .case-overlay {
+      position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: space-between;
+      padding: 22px 24px 24px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.9) 100%);
+      transition: background .4s ease;
+    }
+    .case-item:hover .case-overlay { background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.92) 100%); }
+    .case-top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .case-top .tag {
+      font-size: 11px; letter-spacing: 0.18em; color: var(--ink); font-weight: 700;
+      background: var(--lime); padding: 4px 10px; border-radius: 999px; text-transform: uppercase;
+    }
+    .case-top .brand {
+      font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 500;
+      padding: 4px 10px; border-radius: 999px; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .case-bottom h3 { font-family: var(--font-display); color: #fff; font-size: clamp(22px, 1.9vw, 30px); line-height: 1.08; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .case-bottom p { font-size: 13px; color: rgba(255,255,255,0.82); line-height: 1.55; }
+
+    /* ===== Screen 5 — lime CTA ===== */
+    .final-card {
+      background: var(--lime); border-radius: 28px; padding: 80px 48px; text-align: center;
+      box-shadow: 0 40px 120px rgba(220,255,0,0.15);
+    }
+    .final-card h2 { font-family: var(--font-display); color: var(--ink-2); font-size: clamp(44px, 5.5vw, 84px); line-height: 1.02; letter-spacing: -0.02em; margin-bottom: 18px; }
+    .final-card p { color: var(--ink-2); font-size: 18px; line-height: 1.55; max-width: 620px; margin: 0 auto 36px; opacity: 0.85; }
+    .final-card .btn-primary { background: var(--ink); color: var(--lime); }
+    .final-card .btn-primary:hover { background: #000; }
+    .final-card .btn-secondary { color: var(--ink-2); border-color: rgba(10,10,10,0.3); }
+    .final-card .btn-secondary:hover { background: rgba(10,10,10,0.08); }
+
+    /* ===== Footer ===== */
+    .footer {
+      background: #080808; border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 64px clamp(24px, 6vw, 120px) 40px; text-align: center; color: #fff;
+    }
+    .footer .wordmark { font-family: var(--font-display); font-size: 32px; margin-bottom: 24px; color: #fff; text-decoration: none; display: inline-block; transition: color .2s; }
+    .footer .wordmark:hover { color: var(--lime); }
+    .footer .mini { font-size: 12px; color: var(--muted); line-height: 1.6; max-width: 520px; margin: 0 auto 24px; }
+    .footer .links { font-size: 12px; margin: 20px 0; color: var(--divider); }
+    .footer .links a { color: #fff; text-decoration: none; padding: 0 8px; }
+    .footer .links a:hover { text-decoration: underline; }
+    .footer .copyright { font-size: 12px; color: rgba(255,255,255,0.7); }
+
+    /* ===== Floating logo on scroll ===== */
+    .float-logo {
+      position: fixed; top: 90px; left: 50%; transform: translateX(-50%) translateY(-20px);
+      z-index: 90; padding: 10px 22px; border-radius: 999px;
+      background: rgba(20,20,20,0.72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; gap: 10px;
+      opacity: 0; pointer-events: none; transition: opacity .4s, transform .4s;
+      font-family: var(--font-display); color: #fff; font-size: 18px;
+    }
+    .float-logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 10px var(--lime); }
+    .float-logo.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
     /* ===== Mobile (≤640px) ===== */
     @media (max-width: 640px) {
       .hero-content {
@@ -220,6 +586,24 @@
 </head>
 <body>
 
+  <!-- ===== TOP NAV — logo + lang toggle + login ===== -->
+  <header class="top-nav" id="topNav">
+    <a href="#" class="brand" aria-label="marketrack">
+      <img class="brand-mark" src="marketrack-logo.png" alt="marketrack" />
+    </a>
+    <div class="actions">
+      <div class="lang-toggle" role="tablist" aria-label="Language">
+        <button class="lang-btn active" data-lang="zh">中</button>
+        <span class="lang-sep"></span>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <a href="#" class="nav-cta">登录</a>
+    </div>
+  </header>
+
+  <!-- ===== Floating wordmark (appears after hero) ===== -->
+  <div class="float-logo" id="floatLogo"><span class="dot"></span>marketrack</div>
+
   <!-- ===== HERO SECTION ===== -->
   <section class="hero">
 
@@ -239,22 +623,274 @@
 
     <!-- Text overlay -->
     <div class="hero-content">
-      <h1 class="hero-title">
-        你的每一次营销决策，<br>都有据可查
+      <h1 class="hero-title display">
+        你的每一次营销决策<br>都能有据可查
       </h1>
+    </div>
+
+    <div class="hero-below">
+      <div class="hero-sub-copy">从诊断到供应商匹配到归因，全链路数据支撑</div>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="#final">开始我的营销诊断
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn-secondary" href="#final">预约演示</a>
+      </div>
     </div>
 
   </section>
 
-  <!-- ===== PAGE 2 ===== -->
-  <section class="page-placeholder" id="page-2">
-    <span class="page-label">Page 2</span>
+  <!-- ===== SCREEN 2 — 建立系统感 ===== -->
+  <section class="screen" id="screen-2">
+    <div class="screen-inner">
+      <div style="text-align:center;">
+        <span class="eyebrow">SYSTEM</span>
+        <h2 class="h-title">你的营销课题是什么，<br/>marketrack 就解决什么</h2>
+        <p class="h-sub center" style="text-align:center;">品类数据 × 供应商能力模型 — 每个课题对应一套精准的执行组合。</p>
+      </div>
+      <div class="image-stage">
+        <video autoplay muted loop playsinline preload="auto"
+               src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260322_013248_a74099a8-be2b-4164-a823-eddd5e149fa1.mp4"></video>
+      </div>
+    </div>
   </section>
 
-  <!-- ===== PAGE 3 ===== -->
-  <section class="page-placeholder" id="page-3">
-    <span class="page-label">Page 3</span>
+  <!-- ===== SCREEN 3 — 营销工作流 ===== -->
+  <section class="screen" id="screen-3">
+    <div class="screen-inner">
+      <div style="text-align:center;">
+        <span class="eyebrow">WORKFLOW</span>
+        <h2 class="h-title">marketrack 帮你做决策</h2>
+        <p class="h-sub center" style="text-align:center;">需求建模 · 供应商评估 · 策略推演 · 效果归因，四层数据闭环。</p>
+      </div>
+      <div class="workflow">
+        <div class="tab-list" id="tabList">
+          <div class="tab active" data-i="0">
+            <h5><span class="idx">01</span>需求建模</h5>
+            <p class="short">多轮对话，精准描绘营销需求画像</p>
+            <p class="long">通过多轮智能对话，AI 深度理解您的项目背景、行业特点、预算范围及具体需求偏好，生成结构化需求模型。</p>
+            <div class="progress"></div>
+          </div>
+          <div class="tab" data-i="1">
+            <h5><span class="idx">02</span>供应商评估</h5>
+            <p class="short">多维数据交叉，量化供应商能力</p>
+            <p class="long">利用 AI 技术从行业经验、能力匹配、资源覆盖、历史表现等维度进行多层交叉分析，输出供应商能力评分。</p>
+            <div class="progress"></div>
+          </div>
+          <div class="tab" data-i="2">
+            <h5><span class="idx">03</span>策略推演</h5>
+            <p class="short">模拟执行路径，预判投放效果</p>
+            <p class="long">基于品类数据与供应商能力模型，推演最优执行组合与预期效果，降低决策风险。</p>
+            <div class="progress"></div>
+          </div>
+          <div class="tab" data-i="3">
+            <h5><span class="idx">04</span>效果归因</h5>
+            <p class="short">闭环追踪，量化每一分投入的回报</p>
+            <p class="long">项目完成后自动回收效果数据，对比预测与实际表现，持续优化未来的匹配与投放策略。</p>
+            <div class="progress"></div>
+          </div>
+        </div>
+
+        <div class="tab-stage" id="tabStage">
+          <!-- Panel 01 -->
+          <div class="chat-panel active" data-i="0">
+            <div class="chat-header">
+              <div class="bot-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M12 3v4M8 13h.01M16 13h.01M9 17h6"/></svg>
+              </div>
+              <div class="bot-meta">
+                <div class="bot-name">marketrack</div>
+                <div class="bot-status"><span class="dot-g"></span>在线</div>
+              </div>
+            </div>
+            <div class="chat-messages">
+              <div class="msg user"><div class="bubble">我需要为一款新的美妆产品做社交媒体推广，预算大概 50 万左右</div></div>
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble">好的，我来帮您建模。请问目标平台是小红书、抖音还是全渠道？主要面向什么年龄段？</div></div>
+              <div class="msg user"><div class="bubble">主要是小红书和抖音，面向 18-30 岁的年轻女性</div></div>
+            </div>
+            <div class="chat-input">
+              <input placeholder="输入您的需求..." disabled/>
+              <button class="send-btn" aria-label="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+            </div>
+            <div class="chat-gradient"></div>
+          </div>
+          <!-- Panel 02 -->
+          <div class="chat-panel" data-i="1">
+            <div class="chat-header">
+              <div class="bot-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M12 3v4M8 13h.01M16 13h.01M9 17h6"/></svg></div>
+              <div class="bot-meta"><div class="bot-name">marketrack</div><div class="bot-status"><span class="dot-g"></span>在线</div></div>
+            </div>
+            <div class="chat-messages">
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble">
+                已完成供应商能力评估，核心维度如下：<br/><br/>
+                - 行业经验：美妆个护 3 年+<br/>
+                - 平台能力：小红书种草 + 抖音短视频<br/>
+                - 资源覆盖：KOL 矩阵 500+<br/>
+                - 历史表现：同品类 ROI 均值 3.2
+              </div></div>
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble">综合评分 Top 3 供应商已生成，正在进入策略推演阶段…</div></div>
+            </div>
+            <div class="chat-input"><input placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
+            <div class="chat-gradient"></div>
+          </div>
+          <!-- Panel 03 -->
+          <div class="chat-panel" data-i="2">
+            <div class="chat-header">
+              <div class="bot-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M12 3v4M8 13h.01M16 13h.01M9 17h6"/></svg></div>
+              <div class="bot-meta"><div class="bot-name">marketrack</div><div class="bot-status"><span class="dot-g"></span>在线</div></div>
+            </div>
+            <div class="chat-messages">
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble">
+                基于品类数据与供应商能力模型，推演出最优执行路径：<br/><br/>
+                方案 A：小红书种草 + 抖音信息流<br/>
+                预期 CPE ¥2.8 | 曝光 500 万+<br/><br/>
+                方案 B：KOL 矩阵 + 素人铺量<br/>
+                预期 CPE ¥3.5 | 互动率 8%+<br/><br/>
+                推荐方案 A，预计 ROI 3.6
+              </div></div>
+            </div>
+            <div class="chat-input"><input placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
+            <div class="chat-gradient"></div>
+          </div>
+          <!-- Panel 04 -->
+          <div class="chat-panel" data-i="3">
+            <div class="chat-header">
+              <div class="bot-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M12 3v4M8 13h.01M16 13h.01M9 17h6"/></svg></div>
+              <div class="bot-meta"><div class="bot-name">marketrack</div><div class="bot-status"><span class="dot-g"></span>在线</div></div>
+            </div>
+            <div class="chat-messages">
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble">
+                项目执行完毕，效果归因报告已生成：<br/><br/>
+                - 实际 ROI：3.8（超预期 5.6%）<br/>
+                - 曝光量：620 万<br/>
+                - 种草转化率：12.3%<br/>
+                - 关键归因：小红书笔记 Top 10 贡献 43% 转化
+              </div></div>
+              <div class="msg bot"><div class="av">🤖</div><div class="bubble">已将本次数据沉淀至品类知识库，下次同品类匹配精度将进一步提升。</div></div>
+            </div>
+            <div class="chat-input"><input placeholder="输入您的需求..." disabled/><button class="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button></div>
+            <div class="chat-gradient"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
+
+  <!-- ===== SCREEN 4 — 品牌案例 ===== -->
+  <section class="screen" id="screen-4">
+    <div class="screen-inner">
+      <div style="text-align:center;">
+        <span class="eyebrow">CASES</span>
+        <h2 class="h-title">marketrack 服务品牌案例</h2>
+        <p class="h-sub center" style="text-align:center;">每一个项目，都是一次可复盘、可迭代的营销积累。</p>
+      </div>
+      <div class="case-deck" id="caseDeck">
+        <div class="case-page active" data-page="0">
+          <a class="case-item" href="#">
+            <img src="金典.jpg" alt="金典"/>
+            <div class="case-overlay">
+              <div class="case-top"><span class="tag">食品饮料</span><span class="brand">#金典</span></div>
+              <div class="case-bottom">
+                <h3>用专业 AI 全程落地</h3>
+                <p>视觉建立鲜活信任，草原呼吸触发感官联想。</p>
+              </div>
+            </div>
+          </a>
+          <a class="case-item" href="#">
+            <img src="f1 & miniso.jpg" alt="F1 × MINISO"/>
+            <div class="case-overlay">
+              <div class="case-top"><span class="tag">服饰潮流</span><span class="brand">#F1 × MINISO</span></div>
+              <div class="case-bottom">
+                <h3>联名的价值，在于 1+1&gt;2</h3>
+                <p>跨界 IP 叠加品牌势能，社媒声量增长 3.2 倍。</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="case-page" data-page="1">
+          <a class="case-item" href="#">
+            <img src="Miniso × 疯狂动物城2.jpg" alt="MINISO × 疯狂动物城2"/>
+            <div class="case-overlay">
+              <div class="case-top"><span class="tag">服饰潮流</span><span class="brand">#MINISO × 疯狂动物城 2</span></div>
+              <div class="case-bottom">
+                <h3>潮牌店铺，嵌入 IP 投射</h3>
+                <p>线下主题店 × 线上内容共振，单店客流 +180%。</p>
+              </div>
+            </div>
+          </a>
+          <a class="case-item" href="#">
+            <img src="伊利金典来财小牛.jpg" alt="伊利金典来财小牛"/>
+            <div class="case-overlay">
+              <div class="case-top"><span class="tag">食品饮料</span><span class="brand">#伊利金典·来财小牛</span></div>
+              <div class="case-bottom">
+                <h3>情绪赛道的春节决战</h3>
+                <p>AI 编撰活人感故事，春节档互动率 TOP 1。</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="case-page" data-page="2">
+          <a class="case-item" href="#">
+            <img src="xicha.jpg" alt="喜茶"/>
+            <div class="case-overlay">
+              <div class="case-top"><span class="tag">食品饮料</span><span class="brand">#喜茶</span></div>
+              <div class="case-bottom">
+                <h3>每一杯灵感，都是一次品类实验</h3>
+                <p>社媒锚定 Z 世代，新品首周售出 150 万杯。</p>
+              </div>
+            </div>
+          </a>
+          <a class="case-item" href="#">
+            <img src="maogeping.jpg" alt="毛戈平敦煌飞天"/>
+            <div class="case-overlay">
+              <div class="case-top"><span class="tag">美妆个护</span><span class="brand">#毛戈平·敦煌飞天</span></div>
+              <div class="case-bottom">
+                <h3>让东方美学在数字时代重生</h3>
+                <p>敦煌 IP 叙事，高端线 GMV 环比 +68%。</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="case-dots" id="caseDots">
+        <span class="dot active" data-i="0"></span>
+        <span class="dot" data-i="1"></span>
+        <span class="dot" data-i="2"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCREEN 5 — 开始体验 ===== -->
+  <section class="screen" id="final">
+    <div class="screen-inner">
+      <div class="final-card">
+        <h2>现在，把营销的事<br/>交给 marketrack</h2>
+        <p>描述你的营销目标，3 轮对话完成需求建模。</p>
+        <div class="cta-row center">
+          <a class="btn-primary" href="#">开始我的营销诊断
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a class="btn-secondary" href="#">预约演示</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <a href="#" class="wordmark display">marketrack</a>
+    <p class="mini">从诊断到供应商匹配到归因，marketrack 为品牌营销决策提供全链路数据支撑。</p>
+    <div style="display:flex;justify-content:center;margin:20px 0;">
+      <div style="height:1px;width:96px;background:rgba(255,255,255,0.2);"></div>
+    </div>
+    <div class="links">
+      <a href="#">Support</a><span style="color:var(--divider);">|</span>
+      <a href="#">Privacy</a><span style="color:var(--divider);">|</span>
+      <a href="#">Terms</a><span style="color:var(--divider);">|</span>
+      <a href="#">Unsubscribe</a>
+    </div>
+    <div class="copyright">©2026 marketrack · 让每一次营销决策都有据可查</div>
+  </footer>
 
   <script>
 (function () {
@@ -1075,6 +1711,72 @@
   document.getElementById("btn-replay-fab").addEventListener("click", replay);
 
   init();
+})();
+
+/* ===== Page interactions: floating logo, tab rotate, case swap ===== */
+(function(){
+  const floatLogo = document.getElementById('floatLogo');
+  const hero = document.querySelector('.hero');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > hero.offsetHeight * 0.6) floatLogo.classList.add('show');
+    else floatLogo.classList.remove('show');
+  });
+
+  // Tab auto-rotate (5s) with synced stage image
+  const tabs = document.querySelectorAll('#tabList .tab');
+  const panels = document.querySelectorAll('#tabStage .chat-panel');
+  let tabIdx = 0, tabTimer = null;
+  function activateTab(i) {
+    tabIdx = i;
+    tabs.forEach((t, k) => t.classList.toggle('active', k === i));
+    panels.forEach((p, k) => {
+      const on = k === i;
+      p.classList.toggle('active', on);
+      if (on) {
+        // re-trigger the stagger animation
+        p.querySelectorAll('.msg').forEach(m => {
+          m.style.animation = 'none';
+          // force reflow
+          void m.offsetWidth;
+          m.style.animation = '';
+        });
+      }
+    });
+  }
+  function startTabTimer() {
+    clearInterval(tabTimer);
+    tabTimer = setInterval(() => activateTab((tabIdx + 1) % tabs.length), 5000);
+  }
+  tabs.forEach((t, i) => t.addEventListener('click', () => { activateTab(i); startTabTimer(); }));
+
+  // Observe section 3 and only tick when visible
+  const s3 = document.getElementById('screen-3');
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) startTabTimer();
+    else clearInterval(tabTimer);
+  }, { threshold: 0.35 }).observe(s3);
+
+  // Case deck auto-rotate (5s) with dot sync
+  const casePages = document.querySelectorAll('#caseDeck .case-page');
+  const caseDots = document.querySelectorAll('#caseDots .dot');
+  let caseIdx = 0, caseTimer = null;
+  function activateCase(i) {
+    caseIdx = i;
+    casePages.forEach((p, k) => p.classList.toggle('active', k === i));
+    caseDots.forEach((d, k) => d.classList.toggle('active', k === i));
+  }
+  function startCaseTimer() {
+    clearInterval(caseTimer);
+    caseTimer = setInterval(() => activateCase((caseIdx + 1) % casePages.length), 5000);
+  }
+  caseDots.forEach((d, i) => d.addEventListener('click', () => { activateCase(i); startCaseTimer(); }));
+  const s4 = document.getElementById('screen-4') || casePages[0]?.closest('section');
+  if (s4) new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) startCaseTimer();
+    else clearInterval(caseTimer);
+  }, { threshold: 0.3 }).observe(s4);
+
 })();
   </script>
 </body>
